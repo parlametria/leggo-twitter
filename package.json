@@ -23,6 +23,8 @@
   "homepage": "https://github.com/parlametria/leggo-twitter#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "force-ssl-heroku": "^1.0.2",
+    "heroku-logger": "^0.3.3"
   }
 }
