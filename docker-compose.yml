@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+
+  api:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./server:/app/server
+      - ./server.js:/app/server.js
+    ports:
+      - "5000:5000"
