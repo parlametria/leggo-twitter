@@ -11,3 +11,10 @@ services:
       - ./server.js:/app/server.js
     ports:
       - "5000:5000"
+    networks:
+      - twitternet
+
+networks:
+  twitternet:
+    external:
+      name: leggo_twitter_network
