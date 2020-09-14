@@ -12,4 +12,14 @@ router.get("/", (req, res) => {
   .catch(err => res.status(status.BAD_REQUEST).json({ err }));
 });
 
+router.get("/parlamentar/:id", (req, res) => {
+  Tweet.findAll({
+    where: {
+      id_parlamentar: req.params.id
+    }
+  })
+  .then(tweets => res.status(status.SUCCESS).json(tweets))
+  .catch(err => res.status(status.BAD_REQUEST).json({ err }));
+});
+
 module.exports = router;

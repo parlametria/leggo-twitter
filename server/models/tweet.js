@@ -6,7 +6,18 @@ module.exports = (sequelize, type) => {
         type: type.INTEGER,
         primaryKey: true
       },
+      id_parlamentar_parlametria: type.INTEGER,
+      username: type.INTEGER,
+      created_data: type.DATE,
       text: type.STRING,
+      interactions: type.INTEGER,
+      outrage: type.INTEGER,
+      vagueness: type.INTEGER,
+      argumentation: type.INTEGER,
+      modalization: type.INTEGER,
+      valuation: type.INTEGER,
+      sentiment: type.INTEGER,
+      presupposition: type.INTEGER,
     }
   );
 
