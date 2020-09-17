@@ -1,4 +1,5 @@
 const express = require("express");
+const Sequelize = require("sequelize");
 const router = express.Router();
 
 const status = require("../config/status");
@@ -7,15 +8,28 @@ const models = require("../models/index");
 const Tweet = models.tweet;
 
 router.get("/", (req, res) => {
-  Tweet.findAll()
+  Tweet.findAll({
+    group: ["id_parlamentar_parlametria"],
+    attributes: [
+      "id_parlamentar_parlametria",
+      [Sequelize.fn("COUNT", Sequelize.col("id_parlamentar_parlametria")), "atividade"]
+    ]
+  })
   .then(tweets => res.status(status.SUCCESS).json(tweets))
   .catch(err => res.status(status.BAD_REQUEST).json({ err }));
 });
 
-router.get("/parlamentar/:id", (req, res) => {
+router.get("/parlamentar/:id_parlamentar", (req, res) => {
+  const id_parlamentar = req.params.id_parlamentar;
+
   Tweet.findAll({
+    group: ["id_parlamentar_parlametria"],
+    attributes: [
+      "id_parlamentar_parlametria",
+      [Sequelize.fn("COUNT", Sequelize.col("id_parlamentar_parlametria")), "atividade"]
+    ],
     where: {
-      id_parlamentar: req.params.id
+      id_parlamentar_parlametria: id_parlamentar
     }
   })
   .then(tweets => res.status(status.SUCCESS).json(tweets))

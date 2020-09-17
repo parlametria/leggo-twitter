@@ -8,7 +8,7 @@ module.exports = (sequelize, type) => {
       },
       id_parlamentar_parlametria: type.INTEGER,
       username: type.INTEGER,
-      created_data: type.DATE,
+      created_at: type.DATE,
       text: type.STRING,
       interactions: type.INTEGER,
       outrage: type.INTEGER,
@@ -18,6 +18,10 @@ module.exports = (sequelize, type) => {
       valuation: type.INTEGER,
       sentiment: type.INTEGER,
       presupposition: type.INTEGER,
+    },
+    {
+      timestamps: false,
+      tableName: "tweet"
     }
   );
 
