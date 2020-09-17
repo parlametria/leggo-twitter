@@ -10,7 +10,7 @@ services:
       - ./server:/app/server
       - ./server.js:/app/server.js
     ports:
-      - "5000:5000"
+      - "5001:5001"
     networks:
       - twitternet
 
