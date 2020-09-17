@@ -2,13 +2,13 @@ version: '3.5'
 
 services:
 
-  api:
-    build: .
+  api-leggo-twitter:
+    build: ${TWITTER_API_PATH:-.}
     env_file:
-      - .env
+      - ${TWITTER_API_PATH:-.}/.env
     volumes:
-      - ./server:/app/server
-      - ./server.js:/app/server.js
+      - ${TWITTER_API_PATH:-.}/server:/app/server
+      - ${TWITTER_API_PATH:-.}/server.js:/app/server.js
     ports:
       - "5001:5001"
     networks:
