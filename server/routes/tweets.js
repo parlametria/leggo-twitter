@@ -27,13 +27,35 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
     attributes: [
       "id_parlamentar_parlametria",
       [Sequelize.fn("COUNT", Sequelize.col("id_parlamentar_parlametria")), "atividade_twitter"]
-    ],
-    where: {
-      id_parlamentar_parlametria: id_parlamentar
-    }
+    ]
+  }, {
+    raw: true
   })
-  .then(tweets => res.status(status.SUCCESS).json(tweets))
+  .then(tweets => {
+    const max = Math.max.apply(Math, tweets.map((tweet) => tweet.dataValues.atividade_twitter));
+    const min = Math.min.apply(Math, tweets.map((tweet) => tweet.dataValues.atividade_twitter));
+    Tweet.findOne({
+      group: ["id_parlamentar_parlametria"],
+      attributes: [
+        "id_parlamentar_parlametria",
+        [Sequelize.fn("COUNT", Sequelize.col("id_parlamentar_parlametria")), "atividade_twitter"]
+      ],
+      where: {
+        id_parlamentar_parlametria: id_parlamentar
+      }
+    })
+    .then(tweet => {
+      res.status(status.SUCCESS).json({
+        id_parlamentar_parlametria: tweet.dataValues.id_parlamentar_parlametria,
+        atividade_twitter: +tweet.dataValues.atividade_twitter,
+        max_atividade_twitter: max,
+        min_atividade_twitter: min,
+      })
+    })
+    .catch(err => res.status(status.BAD_REQUEST).json({ err }));
+  })
   .catch(err => res.status(status.BAD_REQUEST).json({ err }));
+
 });
 
 module.exports = router;
