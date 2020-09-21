@@ -10,7 +10,7 @@ const app = express();
 app.use(forceSsl);
 
 const corsOptions = {
-  origin: ['http://localhost:4200', 'http://localhost:3000'],
+  origin: ['http://localhost:4200', 'http://localhost:3000', 'https://leggo-painel-validacao.herokuapp.com/', 'https://leggo-painel.parlametria.org.br/'],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
