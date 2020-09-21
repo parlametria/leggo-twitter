@@ -1,0 +1,20 @@
+version: '3.5'
+
+services:
+
+  api-leggo-twitter:
+    build: ${TWITTER_API_PATH:-.}
+    env_file:
+      - ${TWITTER_API_PATH:-.}/.env
+    volumes:
+      - ${TWITTER_API_PATH:-.}/server:/app/server
+      - ${TWITTER_API_PATH:-.}/server.js:/app/server.js
+    ports:
+      - "5001:5001"
+    networks:
+      - twitternet
+
+networks:
+  twitternet:
+    external:
+      name: leggo_twitter_network

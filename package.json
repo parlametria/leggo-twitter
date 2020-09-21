@@ -1,0 +1,38 @@
+{
+  "name": "leggo-twitter",
+  "version": "0.0.1",
+  "description": "API de acesso à dados do twitter de parlamentares do Congresso Nacional",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parlametria/leggo-twitter.git"
+  },
+  "keywords": [
+    "twitter",
+    "parlamentares"
+  ],
+  "author": "Laboratório Analytics - UFCG",
+  "license": "LGPL-2.1",
+  "bugs": {
+    "url": "https://github.com/parlametria/leggo-twitter/issues"
+  },
+  "homepage": "https://github.com/parlametria/leggo-twitter#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "force-ssl-heroku": "^1.0.2",
+    "heroku-logger": "^0.3.3",
+    "pg": "^8.3.3",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^4.41.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "sequelize-cli": "^6.2.0"
+  }
+}
