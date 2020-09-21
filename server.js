@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const logger = require("heroku-logger");
-const forceSsl = require('force-ssl-heroku');
+const forceSsl = require("force-ssl-heroku");
 
 const status = require("./server/config/status");
 const tweets = require("./server/routes/tweets");
@@ -18,6 +18,16 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+const db = require("./server/models/index");
+db.sequelize
+  .authenticate()
+  .then(() => {
+    logger.info("Conexão com BD estabelecida com sucesso.");
+  })
+  .catch(err => {
+    logger.error("Não foi possível conectar com o BD: ", err);
+  });
+
 app.use("/api/tweets", tweets);
 
 app.get("/", (req, res) => {
@@ -27,5 +37,5 @@ app.get("/", (req, res) => {
   });
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 app.listen(port, () => logger.info(`Servidor rodando na porta ${port}`));
