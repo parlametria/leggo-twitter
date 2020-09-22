@@ -6,6 +6,7 @@ const TweetModel = "./tweet.js";
 
 if (!global.hasOwnProperty("models")) {
   const db = require("../config/env").postgresURI;
+  const isProduction = process.env.NODE_ENV === 'production';
 
   // Connect to Postgres
   const sequelize = new Sequelize(db, {
@@ -13,10 +14,11 @@ if (!global.hasOwnProperty("models")) {
     dialect: "postgres",
     operatorsAliases: false,
     dialectOptions: {
-      ssl: {
-        require: process.env.NODE_ENV === 'production',
+      ssl: isProduction ? {
+        require: true,
         rejectUnauthorized: false
-      }
+      }:
+      false
     },
     pool: {
       max: 5,
