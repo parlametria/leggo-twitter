@@ -26,5 +26,11 @@ module.exports = (sequelize, type) => {
     }
   );
 
+  tweet.associate = function(models) {
+    tweet.belongsTo(models.parlamentar, {
+      foreignKey: "id_parlamentar"
+    })
+  }
+
   return tweet;
 };
