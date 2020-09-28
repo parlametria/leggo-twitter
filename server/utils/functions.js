@@ -20,7 +20,9 @@ function AgregaTema(resultado) {
 function AgregaTweetsPorTema(resultado) {
   const resultadoNovo = resultado.map((tema) => tema.get({ plain: true }));
 
-  console.log(resultadoNovo);
+  if (resultadoNovo.length === 0) {
+    return []
+  }
 
   const agregadoPorTema = resultadoNovo
     .filter((el) => {
