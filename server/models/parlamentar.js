@@ -18,7 +18,9 @@ module.exports = (sequelize, type) => {
 
   parlamentar.associate = function(models) {
     parlamentar.hasMany(models.tweet, {
-      foreignKey: "id_parlamentar_parlametria"
+      foreignKey: "id_parlamentar_parlametria",
+      targetKey: "id_parlamentar_parlametria",
+      as: "parlamentar_tweet"
     })
   }
 

@@ -4,7 +4,8 @@ const logger = require("heroku-logger");
 const forceSsl = require("force-ssl-heroku");
 
 const status = require("./server/config/status");
-const tweets = require("./server/routes/tweets");
+const parlamentares = require("./server/routes/parlamentares");
+const temas = require("./server/routes/temas");
 
 const app = express();
 app.use(forceSsl);
@@ -32,7 +33,8 @@ db.sequelize
     logger.error("Não foi possível conectar com o BD: ", err);
   });
 
-app.use("/api/tweets", tweets);
+app.use("/api/tweets", parlamentares);
+app.use("/api/temas", temas);
 
 app.get("/", (req, res) => {
   res.status(status.SUCCESS).json({

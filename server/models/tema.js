@@ -2,13 +2,12 @@ module.exports = (sequelize, type) => {
   const tema = sequelize.define(
     "tema",
     {
-      id_tema_leggo: {
+      id: {
         type: type.INTEGER,
         primaryKey: true
       },
-      casa: type.STRING,
-      casa_origem: type.STRING,
-      sigla: type.STRING
+      nome: type.STRING,
+      slug: type.STRING
     },
     {
       timestamps: false,
@@ -18,9 +17,10 @@ module.exports = (sequelize, type) => {
   );
 
   tema.associate = function(models) {
-    tema.belongsToMany(models.proposicao, {
-      through: "tema_proposicao",
-      foreignKey: "id_tema"
+    tema.hasMany(models.tema_proposicao, {
+      foreignKey: "id_tema",
+      targetKey: "id_tema",
+      as: "tema_tema_proposicao"
     })
   }
 

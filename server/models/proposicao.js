@@ -18,13 +18,15 @@ module.exports = (sequelize, type) => {
   );
 
   proposicao.associate = function(models) {
-    proposicao.belongsToMany(models.tweet, {
-      through: "tweet_proposicao",
-      foreignKey: "id_proposicao_leggo"
+    proposicao.hasMany(models.tweet_proposicao, {
+      foreignKey: "id_proposicao_leggo",
+      targetKey: "id_proposicao_leggo",
+      as: "proposicao_tweet_proposicao"
     }),
-    proposicao.belongsToMany(models.tema, {
-      through: "tema_proposicao",
-      foreignKey: "id_temaid_proposicao_leggo"
+    proposicao.hasMany(models.tema_proposicao, {
+      foreignKey: "id_proposicao_leggo",
+      targetKey: "id_proposicao_leggo",
+      as: "proposicao_tema_proposicao"
     })
   }
 
