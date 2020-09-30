@@ -74,7 +74,7 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
   const id_parlamentar = req.params.id_parlamentar;
   const tema = req.query.tema;
 
-  if (tema === "undefined" || tema === "") {
+  if (typeof(tema) === "undefined" || tema === "") {
     Tweet.findAll(
       {
         group: ["id_parlamentar_parlametria"],
