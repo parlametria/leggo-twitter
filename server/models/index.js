@@ -3,6 +3,11 @@ const logger = require("heroku-logger");
 
 // Models
 const TweetModel = "./tweet.js";
+const ParlamentarModel = "./parlamentar.js";
+const TemaModel = "./tema.js";
+const ProposicaoModel = "./proposicao.js";
+const TemaProposicaoModel = "./tema_proposicao.js";
+const TweetProposicaoModel = "./tweet_proposicao.js";
 
 if (!global.hasOwnProperty("models")) {
   const db = require("../config/env").postgresURI;
@@ -32,6 +37,11 @@ if (!global.hasOwnProperty("models")) {
     Sequelize: Sequelize,
     sequelize: sequelize,
     tweet: sequelize.import(TweetModel),
+    parlamentar: sequelize.import(ParlamentarModel),
+    tema: sequelize.import(TemaModel),
+    proposicao: sequelize.import(ProposicaoModel),
+    tema_proposicao: sequelize.import(TemaProposicaoModel),
+    tweet_proposicao: sequelize.import(TweetProposicaoModel)
     // add your other models here
   };
 
