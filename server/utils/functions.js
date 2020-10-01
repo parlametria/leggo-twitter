@@ -81,6 +81,7 @@ function AgregaTweetsPorTema(resultado) {
 }
 
 function AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar, agregaTema) {
+
   let data = {
     id_parlamentar_parlametria: id_parlamentar,
     atividade_twitter: 0,
@@ -88,7 +89,7 @@ function AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar, agregaTema) {
     min_atividade_twitter: 0,
   };
 
-  const tweetsProcessados = tweets.map((tweet) => tweet.get({ plain: true }));
+  let tweetsProcessados = tweets.map((tweet) => tweet.get({ plain: true }));
 
   if (tweets.length > 0) {
     if (agregaTema === true) {
