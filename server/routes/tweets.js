@@ -5,21 +5,18 @@ const router = express.Router();
 const status = require("../config/status");
 const models = require("../models/index");
 
-const {
-  AgregaTweetsPorTema,
-  AgregaTweetsPorTemaEParlamentar,
-} = require("../utils/functions");
+const calculaMaxAtividade = require("../utils/functions");
 
-const Tema = models.tema;
-const TemaProposicao = models.tema_proposicao;
+const {
+  QueryAtividadeAgregadaPorTema
+} = require("../utils/queries/tweets_queries");
+
 const Tweet = models.tweet;
-const TweetProposicao = models.tweet_proposicao;
-const Proposicao = models.proposicao;
 
 router.get("/parlamentares", (req, res) => {
   const tema = req.query.tema;
 
-  if (typeof(tema) === "undefined" || tema === "") {
+  if (typeof tema === "undefined" || tema === "") {
     Tweet.findAll({
       group: ["id_parlamentar_parlametria"],
       attributes: [
@@ -33,38 +30,12 @@ router.get("/parlamentares", (req, res) => {
       .then((tweets) => res.status(status.SUCCESS).json(tweets))
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   } else {
-    TemaProposicao.findAll({
-      attributes: ["id_tema"],
-      include: [
-        {
-          model: Proposicao,
-          attributes: ["id_proposicao_leggo"],
-          include: [
-            {
-              model: TweetProposicao,
-              as: "proposicao_tweet_proposicao",
-              attributes: ["id_tweet"],
-              include: [
-                {
-                  model: Tweet,
-                  attributes: [
-                    ["id_parlamentar_parlametria", "id_parlamentar"],
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          model: Tema,
-          where: {
-            slug: tema,
-          },
-        },
-      ],
-    })
+    models.sequelize
+      .query(QueryAtividadeAgregadaPorTema(tema), {
+        type: Sequelize.QueryTypes.SELECT,
+      })
       .then((tweets) => {
-        res.status(status.SUCCESS).json(AgregaTweetsPorTema(tweets));
+        res.status(status.SUCCESS).json(tweets);
       })
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   }
@@ -91,44 +62,20 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
       }
     )
       .then((tweets) => {
-        res.status(status.SUCCESS).json(AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar, false));
+        res
+          .status(status.SUCCESS)
+          .json(calculaMaxAtividade(tweets, id_parlamentar, true));
       })
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   } else {
-    TemaProposicao.findAll({
-      attributes: ["id_tema"],
-      include: [
-        {
-          model: Proposicao,
-          attributes: ["id_proposicao_leggo"],
-          include: [
-            {
-              model: TweetProposicao,
-              as: "proposicao_tweet_proposicao",
-              attributes: ["id_tweet"],
-              include: [
-                {
-                  model: Tweet,
-                  attributes: [
-                    ["id_parlamentar_parlametria", "id_parlamentar"],
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          model: Tema,
-          where: {
-            slug: tema,
-          },
-        },
-      ],
-    })
+    models.sequelize
+      .query(QueryAtividadeAgregadaPorTema(tema), {
+        type: Sequelize.QueryTypes.SELECT,
+      })
       .then((tweets) => {
         res
           .status(status.SUCCESS)
-          .json(AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar, true));
+          .json(calculaMaxAtividade(tweets, id_parlamentar, false));
       })
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   }
