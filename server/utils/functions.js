@@ -80,7 +80,8 @@ function AgregaTweetsPorTema(resultado) {
   return data;
 }
 
-function AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar) {
+function AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar, agregaTema) {
+
   let data = {
     id_parlamentar_parlametria: id_parlamentar,
     atividade_twitter: 0,
@@ -88,26 +89,23 @@ function AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar) {
     min_atividade_twitter: 0,
   };
 
+  let tweetsProcessados = tweets.map((tweet) => tweet.get({ plain: true }));
+
   if (tweets.length > 0) {
-    const tweetsPorTema = AgregaTweetsPorTema(tweets);
+    if (agregaTema === true) {
+      tweetsProcessados = AgregaTweetsPorTema(tweets);
+    }
 
     const max_atividade_twitter = Math.max.apply(
       Math,
-      tweetsPorTema.map(function (o) {
-        return o.atividade_twitter;
-      })
-    );
-    const min_atividade_twitter = Math.min.apply(
-      Math,
-      tweetsPorTema.map(function (o) {
+      tweetsProcessados.map(function (o) {
         return o.atividade_twitter;
       })
     );
 
     data.max_atividade_twitter = max_atividade_twitter;
-    data.min_atividade_twitter = min_atividade_twitter;
 
-    const atividade_twitter = tweetsPorTema.filter((el) => {
+    const atividade_twitter = tweetsProcessados.filter((el) => {
       return el.id_parlamentar_parlametria == id_parlamentar;
     });
 
