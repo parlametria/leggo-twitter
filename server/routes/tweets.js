@@ -15,6 +15,7 @@ const Tweet = models.tweet;
 
 router.get("/parlamentares", (req, res) => {
   const tema = req.query.tema;
+  const interesse = "congresso-remoto"; //req.query.interesse;
 
   if (typeof tema === "undefined" || tema === "") {
     Tweet.findAll({
@@ -31,7 +32,7 @@ router.get("/parlamentares", (req, res) => {
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   } else {
     models.sequelize
-      .query(QueryAtividadeAgregadaPorTema(tema), {
+      .query(QueryAtividadeAgregadaPorTema(tema, interesse), {
         type: Sequelize.QueryTypes.SELECT,
       })
       .then((tweets) => {
@@ -44,6 +45,7 @@ router.get("/parlamentares", (req, res) => {
 router.get("/parlamentares/:id_parlamentar", (req, res) => {
   const id_parlamentar = req.params.id_parlamentar;
   const tema = req.query.tema;
+  const interesse = "congresso-remoto"; //req.query.interesse;
 
   if (typeof(tema) === "undefined" || tema === "") {
     Tweet.findAll(
@@ -69,7 +71,7 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   } else {
     models.sequelize
-      .query(QueryAtividadeAgregadaPorTema(tema), {
+      .query(QueryAtividadeAgregadaPorTema(tema, interesse), {
         type: Sequelize.QueryTypes.SELECT,
       })
       .then((tweets) => {
