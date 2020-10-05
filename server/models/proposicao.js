@@ -3,7 +3,7 @@ module.exports = (sequelize, type) => {
     "proposicao",
     {
       id_proposicao_leggo: {
-        type: type.INTEGER,
+        type: type.STRING,
         primaryKey: true
       },
       casa: type.STRING,
@@ -27,6 +27,11 @@ module.exports = (sequelize, type) => {
       foreignKey: "id_proposicao_leggo",
       targetKey: "id_proposicao_leggo",
       as: "proposicao_tema_proposicao"
+    }),
+    proposicao.hasMany(models.agenda_proposicao, {
+      foreignKey: "id_proposicao_leggo",
+      targetKey: "id_proposicao_leggo",
+      as: "proposicao_agenda_proposicao"
     })
   }
 

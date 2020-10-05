@@ -8,6 +8,8 @@ const TemaModel = "./tema.js";
 const ProposicaoModel = "./proposicao.js";
 const TemaProposicaoModel = "./tema_proposicao.js";
 const TweetProposicaoModel = "./tweet_proposicao.js";
+const AgendaModel = "./agenda.js";
+const AgendaProposicaoModel = "./agenda_proposicao.js";
 
 if (!global.hasOwnProperty("models")) {
   const db = require("../config/env").postgresURI;
@@ -41,7 +43,9 @@ if (!global.hasOwnProperty("models")) {
     tema: sequelize.import(TemaModel),
     proposicao: sequelize.import(ProposicaoModel),
     tema_proposicao: sequelize.import(TemaProposicaoModel),
-    tweet_proposicao: sequelize.import(TweetProposicaoModel)
+    tweet_proposicao: sequelize.import(TweetProposicaoModel),
+    agenda: sequelize.import(AgendaModel),
+    agenda_proposicao: sequelize.import(AgendaProposicaoModel)
     // add your other models here
   };
 
