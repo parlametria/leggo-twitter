@@ -19,7 +19,7 @@ const Proposicao = models.proposicao;
 router.get("/parlamentares", (req, res) => {
   const tema = req.query.tema;
 
-  if (tema === "undefined" || tema === "") {
+  if (typeof(tema) === "undefined" || tema === "") {
     Tweet.findAll({
       group: ["id_parlamentar_parlametria"],
       attributes: [
@@ -74,7 +74,7 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
   const id_parlamentar = req.params.id_parlamentar;
   const tema = req.query.tema;
 
-  if (tema === "undefined" || tema === "") {
+  if (typeof(tema) === "undefined" || tema === "") {
     Tweet.findAll(
       {
         group: ["id_parlamentar_parlametria"],
@@ -91,40 +91,7 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
       }
     )
       .then((tweets) => {
-        const max = Math.max.apply(
-          Math,
-          tweets.map((tweet) => tweet.dataValues.atividade_twitter)
-        );
-        const min = Math.min.apply(
-          Math,
-          tweets.map((tweet) => tweet.dataValues.atividade_twitter)
-        );
-        Tweet.findOne({
-          group: ["id_parlamentar_parlametria"],
-          attributes: [
-            "id_parlamentar_parlametria",
-            [
-              Sequelize.fn(
-                "COUNT",
-                Sequelize.col("id_parlamentar_parlametria")
-              ),
-              "atividade_twitter",
-            ],
-          ],
-          where: {
-            id_parlamentar_parlametria: id_parlamentar,
-          },
-        })
-          .then((tweet) => {
-            res.status(status.SUCCESS).json({
-              id_parlamentar_parlametria:
-                tweet.dataValues.id_parlamentar_parlametria,
-              atividade_twitter: +tweet.dataValues.atividade_twitter,
-              max_atividade_twitter: max,
-              min_atividade_twitter: min,
-            });
-          })
-          .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
+        res.status(status.SUCCESS).json(AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar, false));
       })
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   } else {
@@ -161,7 +128,7 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
       .then((tweets) => {
         res
           .status(status.SUCCESS)
-          .json(AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar));
+          .json(AgregaTweetsPorTemaEParlamentar(tweets, id_parlamentar, true));
       })
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   }
