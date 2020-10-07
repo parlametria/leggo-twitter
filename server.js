@@ -6,6 +6,7 @@ const forceSsl = require("force-ssl-heroku");
 const status = require("./server/config/status");
 const tweets = require("./server/routes/tweets");
 const temas = require("./server/routes/temas");
+const parlamentares = require("./server/routes/parlamentares");
 
 const app = express();
 app.use(forceSsl);
@@ -35,6 +36,7 @@ db.sequelize
 
 app.use("/api/tweets", tweets);
 app.use("/api/temas", temas);
+app.use("/api/parlamentares", parlamentares);
 
 app.get("/", (req, res) => {
   res.status(status.SUCCESS).json({
