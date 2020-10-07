@@ -47,7 +47,7 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
   const tema = req.query.tema;
   const interesse = "congresso-remoto"; //req.query.interesse;
 
-  if (typeof(tema) === "undefined" || tema === "") {
+  if (typeof tema === "undefined" || tema === "") {
     Tweet.findAll(
       {
         group: ["id_parlamentar_parlametria"],
