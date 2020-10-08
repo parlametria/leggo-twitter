@@ -11,7 +11,7 @@ const models = require("../models/index");
 const {
   QueryPercentualAtividadeAgregadaPorAgenda,
   QueryPercentualAtividadeAgregadaPorAgendaETema,
-} = require("../utils/queries/tweets_queries");
+} = require("../utils/queries/percentual_tweets_queries");
 
 const Tweet = models.tweet;
 const Parlamentar = models.parlamentar;
