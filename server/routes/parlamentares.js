@@ -8,6 +8,11 @@ const router = express.Router();
 const status = require("../config/status");
 const models = require("../models/index");
 
+const {
+  QueryPercentualAtividadeAgregadaPorAgenda,
+  QueryPercentualAtividadeAgregadaPorAgendaETema,
+} = require("../utils/queries/tweets_queries");
+
 const Tweet = models.tweet;
 const Parlamentar = models.parlamentar;
 
@@ -50,7 +55,7 @@ router.get("/:id_parlamentar", (req, res) => {
 
 // média por dia de tweets
 // datas teste: 06-30-2019 - 12-30-2019
-// mes - dia - ano 
+// mes - dia - ano
 router.get("/:id_parlamentar/media", (req, res) => {
 
   const id_parlamentar = req.params.id_parlamentar;
@@ -59,16 +64,16 @@ router.get("/:id_parlamentar/media", (req, res) => {
 
   let dataFinal = req.query.data_final;
 
-  var dataInicialSplit = new Date(dataInicial); 
+  var dataInicialSplit = new Date(dataInicial);
 
-  var dataFinalSplit = new Date(dataFinal); 
+  var dataFinalSplit = new Date(dataFinal);
 
   var diferenca = dataFinalSplit.getTime() - dataInicialSplit.getTime();
   var diferenca_dias = diferenca / (1000 * 3600 * 24);
 
   console.log("datas");
   console.log(diferenca_dias);
-  
+
   let whereClause = {
     created_at: {
       [Sequelize.Op.between]: [dataInicial, dataFinal]
@@ -79,7 +84,7 @@ router.get("/:id_parlamentar/media", (req, res) => {
     attributes: [
       "id_parlamentar_parlametria",
       [
-        Sequelize.fn('COUNT', Sequelize.col("id_parlamentar_parlametria")), 
+        Sequelize.fn('COUNT', Sequelize.col("id_parlamentar_parlametria")),
         'atividade_twitter'
       ],
     ],
@@ -95,9 +100,54 @@ router.get("/:id_parlamentar/media", (req, res) => {
       res.status(status.SUCCESS).json(result);
     })
     .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
-  });
-  
-  module.exports = router;
+});
 
+// percentual de atividade por tema
+// datas teste: 2018-01-01 a 2020-10-01
+// ano-mes-dia
+router.get("/:id_parlamentar/percentual_atividade_agenda", (req, res) => {
+  const idParlamentar = req.params.id_parlamentar;
+  const agenda = "congresso-remoto"; // req.query.interesse;
+  const tema = req.query.tema;
+
+  let dataInicial = req.query.data_inicial;
+  let dataFinal = req.query.data_final;
+
+  dataInicial = moment(dataInicial).format("YYYY-MM-DD");
+  dataFinal = moment(dataFinal).format("YYYY-MM-DD");
+
+  let query;
+  if (typeof tema === "undefined" || tema === "") {
+    query = QueryPercentualAtividadeAgregadaPorAgenda(
+      agenda,
+      dataInicial,
+      dataFinal,
+      idParlamentar
+    );
+  } else {
+    query = QueryPercentualAtividadeAgregadaPorAgendaETema(
+      agenda,
+      tema,
+      dataInicial,
+      dataFinal,
+      idParlamentar
+    );
+  }
+
+  models.sequelize
+    .query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    })
+    .then((tweets) => {
+      tweets = tweets.map((t) => {
+        t.atividade_twitter = parseInt(t.atividade_twitter);
+        t.percentual_atividade_twitter = t.atividade_twitter / t.total;
+        return t;
+      });
+
+      res.status(status.SUCCESS).json(tweets);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
+});
 
 module.exports = router;
