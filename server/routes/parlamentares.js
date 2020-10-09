@@ -16,15 +16,12 @@ const {
 } = require("../utils/queries/tweets_queries");
 const tweet = require("../models/tweet");
 
-// média por dia de tweets
-// datas teste: 06-30-2019 - 12-30-2019
-// mes - dia - ano 
 router.get("/media", (req, res) => {
-
-  // const id_parlamentar = req.params.id_parlamentar;
+  
   const tema = req.query.tema;
   const interesse = "congresso-remoto"; //req.query.interesse;
   
+  // mes - dia - ano 
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
   var dataInicialFormat = new Date(dataInicial); 
@@ -53,7 +50,6 @@ router.get("/media", (req, res) => {
       .then((tweets) => {
         const result = tweets.map(tweets => {
           let data = tweets.toJSON();
-          console.log(data);
           data['media_tweets'] = data['atividade_twitter']/diferenca_dias;
           return data;
         });
