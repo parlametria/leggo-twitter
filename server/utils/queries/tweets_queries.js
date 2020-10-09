@@ -15,5 +15,4 @@ function QueryAtividadeAgregadaPorTema(tema, interesse) {
   return q;
 }
 
-
 module.exports = { QueryAtividadeAgregadaPorTema }
