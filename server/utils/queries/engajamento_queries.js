@@ -1,10 +1,11 @@
 
 function QueryEngajamentoAgregadoPorAgenda(interesse, dataInicial, dataFinal, idParlamentar) {
   const q = "SELECT " +
-  "res.tema_slug AS tema_slug, " +
-  "SUM(res.interactions) OVER (PARTITION BY res.slug, res.tema_slug) AS engajamento FROM (" +
+  "res.id_parlamentar_parlametria, " +
+  "SUM(res.interactions) OVER (PARTITION BY res.slug) AS engajamento FROM (" +
   "SELECT " +
-  "agenda.slug, tema.slug AS tema_slug, " +
+  "agenda.slug, " +
+  "tweet.id_parlamentar_parlametria AS id_parlamentar_parlametria, " +
   "SUM(tweet.interactions) AS interactions " +
   "FROM tema_proposicao "+
   "INNER JOIN proposicao ON tema_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
@@ -13,8 +14,7 @@ function QueryEngajamentoAgregadoPorAgenda(interesse, dataInicial, dataFinal, id
   "INNER JOIN tweet_proposicao ON proposicao.id_proposicao_leggo = tweet_proposicao.id_proposicao_leggo " +
   "INNER JOIN tweet ON tweet_proposicao.id_tweet = tweet.id_tweet AND tweet.created_at BETWEEN '"+
   dataInicial +"' AND '"+ dataFinal + "' AND tweet.id_parlamentar_parlametria = '" + idParlamentar + "' " +
-  "INNER JOIN tema ON tema_proposicao.id_tema = tema.id " +
-  "GROUP BY tema.slug, agenda.slug) AS res;";
+  "GROUP BY agenda.slug, tweet.id_parlamentar_parlametria) AS res;";
 
   return q;
 }
