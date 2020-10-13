@@ -77,6 +77,53 @@ router.get("/media", (req, res) => {
   }
   });
 
+// percentual de atividade por tema
+// datas teste: 2018-01-01 a 2020-10-01
+// ano-mes-dia
+router.get("/percentual_atividade_agenda", (req, res) => {
+  const agenda = "congresso-remoto"; // req.query.interesse;
+  const tema = req.query.tema;
+
+  let dataInicial = req.query.data_inicial;
+  let dataFinal = req.query.data_final;
+
+  dataInicial = moment(dataInicial).format("YYYY-MM-DD");
+  dataFinal = moment(dataFinal).format("YYYY-MM-DD");
+
+  let query;
+  if (typeof tema === "undefined" || tema === "") {
+    query = QueryPercentualAtividadeAgregadaPorAgenda(
+      agenda,
+      dataInicial,
+      dataFinal
+    );
+  } else {
+    query = QueryPercentualAtividadeAgregadaPorAgendaETema(
+      agenda,
+      tema,
+      dataInicial,
+      dataFinal
+    );
+  }
+
+  console.log(query)
+
+  models.sequelize
+    .query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    })
+    .then((tweets) => {
+      tweets = tweets.map((t) => {
+        t.atividade_twitter = parseInt(t.atividade_twitter);
+        t.percentual_atividade_twitter = t.atividade_twitter / t.total;
+        return t;
+      });
+
+      res.status(status.SUCCESS).json(tweets);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
+});
+
 router.get("/:id_parlamentar", (req, res) => {
   const id_parlamentar = req.params.id_parlamentar;
 
@@ -112,56 +159,5 @@ router.get("/:id_parlamentar", (req, res) => {
     })
     .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
 });
-
-// percentual de atividade por tema
-// datas teste: 2018-01-01 a 2020-10-01
-// ano-mes-dia
-router.get("/:id_parlamentar/percentual_atividade_agenda", (req, res) => {
-  const idParlamentar = req.params.id_parlamentar;
-  const agenda = "congresso-remoto"; // req.query.interesse;
-  const tema = req.query.tema;
-
-  let dataInicial = req.query.data_inicial;
-  let dataFinal = req.query.data_final;
-
-  dataInicial = moment(dataInicial).format("YYYY-MM-DD");
-  dataFinal = moment(dataFinal).format("YYYY-MM-DD");
-
-  let query;
-  if (typeof tema === "undefined" || tema === "") {
-    query = QueryPercentualAtividadeAgregadaPorAgenda(
-      agenda,
-      dataInicial,
-      dataFinal,
-      idParlamentar
-    );
-  } else {
-    query = QueryPercentualAtividadeAgregadaPorAgendaETema(
-      agenda,
-      tema,
-      dataInicial,
-      dataFinal,
-      idParlamentar
-    );
-  }
-
-  console.log(query)
-
-  models.sequelize
-    .query(query, {
-      type: Sequelize.QueryTypes.SELECT,
-    })
-    .then((tweets) => {
-      tweets = tweets.map((t) => {
-        t.atividade_twitter = parseInt(t.atividade_twitter);
-        t.percentual_atividade_twitter = t.atividade_twitter / t.total;
-        return t;
-      });
-
-      res.status(status.SUCCESS).json(tweets);
-    })
-    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
-});
-
 
 module.exports = router;
