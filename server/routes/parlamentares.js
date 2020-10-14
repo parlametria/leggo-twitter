@@ -30,8 +30,15 @@ router.get("/media", (req, res) => {
   let dataFinal = req.query.data_final;
   var dataInicialFormat = new Date(dataInicial);
   var dataFinalFormat = new Date(dataFinal);
-  var diferenca = dataFinalFormat.getTime() - dataInicialFormat.getTime();
-  var diferenca_dias = diferenca / (1000 * 3600 * 24);
+  var diferenca = (dataFinalFormat.getTime() - dataInicialFormat.getTime()) / 1000;
+  var diferenca_semanas = diferenca / (60 * 60 * 24 * 7);
+  var round_date = Math.abs(Math.round(diferenca_semanas));
+
+  if(round_date <= 0){
+    round_date = 1;
+  }
+
+  console.log(round_date);
 
   let whereClause = {
     created_at: {
@@ -54,7 +61,7 @@ router.get("/media", (req, res) => {
       .then((tweets) => {
         const result = tweets.map(tweets => {
           let data = tweets.toJSON();
-          data['media_tweets'] = data['atividade_twitter']/diferenca_dias;
+          data['media_tweets'] = data['atividade_twitter']/round_date;
           return data;
         });
         res.status(status.SUCCESS).json(result);
@@ -68,7 +75,7 @@ router.get("/media", (req, res) => {
       .then((tweets) => {
         tweets = tweets.map((t) => {
           t.atividade_twitter = parseInt(t.atividade_twitter);
-          t['media_tweets'] = t['atividade_twitter']/diferenca_dias;
+          t['media_tweets'] = t['atividade_twitter']/round_date;
           return t;
         });
         res.status(status.SUCCESS).json(tweets);
