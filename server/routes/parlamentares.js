@@ -38,8 +38,6 @@ router.get("/media", (req, res) => {
   if(round_date <= 0){
     round_date = 1;
   }
- 
-  console.log(round_date);
 
   let whereClause = {
     created_at: {
