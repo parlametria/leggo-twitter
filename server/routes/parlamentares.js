@@ -28,15 +28,18 @@ router.get("/media", (req, res) => {
    // mes - dia - ano
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
- 
+
   var dataInicialFormat = new Date(dataInicial);
   var dataFinalFormat = new Date(dataFinal);
-  var diferenca = (dataFinalFormat.getTime() - dataInicialFormat.getTime()) / 1000;
-  var diferenca_meses = diferenca / (60 * 60 * 24 * 7 * 4);
-  var round_date = Math.abs(Math.round(diferenca_meses));
- 
-  if(round_date <= 0){
-    round_date = 1;
+
+  let diferenca_meses = Math.trunc(
+    Math.abs(
+      moment(dataFinalFormat).diff(moment(dataInicialFormat), "months", true)
+      )
+  );
+
+  if(diferenca_meses === 0) {
+    diferenca_meses = 1;
   }
 
   let whereClause = {
@@ -60,7 +63,7 @@ router.get("/media", (req, res) => {
       .then((tweets) => {
         const result = tweets.map(tweets => {
           let data = tweets.toJSON();
-          data['media_tweets'] = data['atividade_twitter']/round_date;
+          data['media_tweets'] = data['atividade_twitter'] / diferenca_meses;
           return data;
         });
         res.status(status.SUCCESS).json(result);
@@ -74,7 +77,7 @@ router.get("/media", (req, res) => {
       .then((tweets) => {
         tweets = tweets.map((t) => {
           t.atividade_twitter = parseInt(t.atividade_twitter);
-          t['media_tweets'] = t['atividade_twitter']/round_date;
+          t['media_tweets'] = t['atividade_twitter'] / diferenca_meses;
           return t;
         });
         res.status(status.SUCCESS).json(tweets);
