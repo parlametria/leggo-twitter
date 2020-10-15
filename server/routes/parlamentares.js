@@ -25,13 +25,22 @@ router.get("/media", (req, res) => {
   const tema = req.query.tema;
   const interesse = "congresso-remoto"; //req.query.interesse;
 
-  // mes - dia - ano
+   // mes - dia - ano
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
+
   var dataInicialFormat = new Date(dataInicial);
   var dataFinalFormat = new Date(dataFinal);
-  var diferenca = dataFinalFormat.getTime() - dataInicialFormat.getTime();
-  var diferenca_dias = diferenca / (1000 * 3600 * 24);
+
+  let diferenca_meses = Math.trunc(
+    Math.abs(
+      moment(dataFinalFormat).diff(moment(dataInicialFormat), "months", true)
+      )
+  );
+
+  if(diferenca_meses === 0) {
+    diferenca_meses = 1;
+  }
 
   let whereClause = {
     created_at: {
@@ -54,7 +63,7 @@ router.get("/media", (req, res) => {
       .then((tweets) => {
         const result = tweets.map(tweets => {
           let data = tweets.toJSON();
-          data['media_tweets'] = data['atividade_twitter']/diferenca_dias;
+          data['media_tweets'] = data['atividade_twitter'] / diferenca_meses;
           return data;
         });
         res.status(status.SUCCESS).json(result);
@@ -68,7 +77,7 @@ router.get("/media", (req, res) => {
       .then((tweets) => {
         tweets = tweets.map((t) => {
           t.atividade_twitter = parseInt(t.atividade_twitter);
-          t['media_tweets'] = t['atividade_twitter']/diferenca_dias;
+          t['media_tweets'] = t['atividade_twitter'] / diferenca_meses;
           return t;
         });
         res.status(status.SUCCESS).json(tweets);
