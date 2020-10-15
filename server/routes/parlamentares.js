@@ -25,19 +25,20 @@ router.get("/media", (req, res) => {
   const tema = req.query.tema;
   const interesse = "congresso-remoto"; //req.query.interesse;
 
-  // mes - dia - ano
+   // mes - dia - ano
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
+ 
   var dataInicialFormat = new Date(dataInicial);
   var dataFinalFormat = new Date(dataFinal);
   var diferenca = (dataFinalFormat.getTime() - dataInicialFormat.getTime()) / 1000;
-  var diferenca_semanas = diferenca / (60 * 60 * 24 * 7);
-  var round_date = Math.abs(Math.round(diferenca_semanas));
-
+  var diferenca_meses = diferenca / (60 * 60 * 24 * 7 * 4);
+  var round_date = Math.abs(Math.round(diferenca_meses));
+ 
   if(round_date <= 0){
     round_date = 1;
   }
-
+ 
   console.log(round_date);
 
   let whereClause = {
