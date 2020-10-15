@@ -82,47 +82,10 @@ router.get("/media", (req, res) => {
   }
   });
 
-router.get("/:id_parlamentar", (req, res) => {
-  const id_parlamentar = req.params.id_parlamentar;
-
-  Tweet.findAll({
-    group: ["id_parlamentar_parlametria", "created_at", "username"],
-    attributes: [
-      ["created_at", "data"],
-      "username",
-      [
-        Sequelize.fn("COUNT", Sequelize.col("id_parlamentar_parlametria")),
-        "atividade_twitter",
-      ],
-    ],
-    where: {
-      id_parlamentar_parlametria: id_parlamentar,
-      created_at: {
-        [Sequelize.Op.gte]: moment().subtract(12, 'months').format('YYYY-MM-DD')
-      }
-    }
-  })
-    .then((tweets) => {
-
-      const data = {
-        "username": tweets[0].username
-      };
-
-      data.tweets = tweets.map(function(t) {
-        delete t.dataValues.username;
-        return t;
-      });
-
-      res.status(status.SUCCESS).json(data);
-    })
-    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
-});
-
 // percentual de atividade por tema
 // datas teste: 2018-01-01 a 2020-10-01
 // ano-mes-dia
-router.get("/:id_parlamentar/percentual_atividade_agenda", (req, res) => {
-  const idParlamentar = req.params.id_parlamentar;
+router.get("/percentual_atividade_agenda", (req, res) => {
   const agenda = "congresso-remoto"; // req.query.interesse;
   const tema = req.query.tema;
 
@@ -137,16 +100,14 @@ router.get("/:id_parlamentar/percentual_atividade_agenda", (req, res) => {
     query = QueryPercentualAtividadeAgregadaPorAgenda(
       agenda,
       dataInicial,
-      dataFinal,
-      idParlamentar
+      dataFinal
     );
   } else {
     query = QueryPercentualAtividadeAgregadaPorAgendaETema(
       agenda,
       tema,
       dataInicial,
-      dataFinal,
-      idParlamentar
+      dataFinal
     );
   }
 
@@ -210,5 +171,40 @@ router.get("/:id_parlamentar/engajamento", (req, res) => {
     .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
 });
 
+router.get("/:id_parlamentar", (req, res) => {
+  const id_parlamentar = req.params.id_parlamentar;
+
+  Tweet.findAll({
+    group: ["id_parlamentar_parlametria", "created_at", "username"],
+    attributes: [
+      ["created_at", "data"],
+      "username",
+      [
+        Sequelize.fn("COUNT", Sequelize.col("id_parlamentar_parlametria")),
+        "atividade_twitter",
+      ],
+    ],
+    where: {
+      id_parlamentar_parlametria: id_parlamentar,
+      created_at: {
+        [Sequelize.Op.gte]: moment().subtract(12, 'months').format('YYYY-MM-DD')
+      }
+    }
+  })
+    .then((tweets) => {
+
+      const data = {
+        "username": tweets[0].username
+      };
+
+      data.tweets = tweets.map(function(t) {
+        delete t.dataValues.username;
+        return t;
+      });
+
+      res.status(status.SUCCESS).json(data);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
+});
 
 module.exports = router;
