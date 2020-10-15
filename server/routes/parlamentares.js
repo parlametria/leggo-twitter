@@ -13,6 +13,11 @@ const {
   QueryPercentualAtividadeAgregadaPorAgendaETema,
 } = require("../utils/queries/percentual_tweets_queries");
 
+const {
+  QueryEngajamentoAgregadoPorAgenda,
+  QueryEngajamentoAgregadoPorAgendaETema
+} = require("../utils/queries/engajamento_queries");
+
 const Tweet = models.tweet;
 
 const {
@@ -127,6 +132,48 @@ router.get("/percentual_atividade_agenda", (req, res) => {
         t.percentual_atividade_twitter = t.atividade_twitter / t.total;
         return t;
       });
+
+      res.status(status.SUCCESS).json(tweets);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
+});
+
+router.get("/:id_parlamentar/engajamento", (req, res) => {
+  const idParlamentar = req.params.id_parlamentar;
+  const agenda = "congresso-remoto"; // req.query.interesse;
+  const tema = req.query.tema;
+
+  let dataInicial = req.query.data_inicial;
+  let dataFinal = req.query.data_final;
+
+  dataInicial = moment(dataInicial).format("YYYY-MM-DD");
+  dataFinal = moment(dataFinal).format("YYYY-MM-DD");
+
+  let query;
+  if (typeof tema === "undefined" || tema === "") {
+    query = QueryEngajamentoAgregadoPorAgenda(
+      agenda,
+      dataInicial,
+      dataFinal,
+      idParlamentar
+    );
+  } else {
+    query = QueryEngajamentoAgregadoPorAgendaETema(
+      agenda,
+      tema,
+      dataInicial,
+      dataFinal,
+      idParlamentar
+    );
+  }
+
+  console.log(query)
+
+  models.sequelize
+    .query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    })
+    .then((tweets) => {
 
       res.status(status.SUCCESS).json(tweets);
     })
