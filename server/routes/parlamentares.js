@@ -138,8 +138,7 @@ router.get("/percentual_atividade_agenda", (req, res) => {
     .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
 });
 
-router.get("/:id_parlamentar/engajamento", (req, res) => {
-  const idParlamentar = req.params.id_parlamentar;
+router.get("/engajamento", (req, res) => {
   const agenda = "congresso-remoto"; // req.query.interesse;
   const tema = req.query.tema;
 
@@ -154,16 +153,14 @@ router.get("/:id_parlamentar/engajamento", (req, res) => {
     query = QueryEngajamentoAgregadoPorAgenda(
       agenda,
       dataInicial,
-      dataFinal,
-      idParlamentar
+      dataFinal
     );
   } else {
     query = QueryEngajamentoAgregadoPorAgendaETema(
       agenda,
       tema,
       dataInicial,
-      dataFinal,
-      idParlamentar
+      dataFinal
     );
   }
 
