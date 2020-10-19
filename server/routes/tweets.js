@@ -8,7 +8,7 @@ const models = require("../models/index");
 const calculaMaxAtividade = require("../utils/functions");
 
 const {
-  QueryAtividadeAgregadaPorTema
+  QueryAtividadeAgregadaPorTemaEAgenda
 } = require("../utils/queries/tweets_queries");
 
 const Tweet = models.tweet;
@@ -32,7 +32,7 @@ router.get("/parlamentares", (req, res) => {
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   } else {
     models.sequelize
-      .query(QueryAtividadeAgregadaPorTema(tema, interesse), {
+      .query(QueryAtividadeAgregadaPorTemaEAgenda(tema, interesse), {
         type: Sequelize.QueryTypes.SELECT,
       })
       .then((tweets) => {
@@ -71,7 +71,7 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   } else {
     models.sequelize
-      .query(QueryAtividadeAgregadaPorTema(tema, interesse), {
+      .query(QueryAtividadeAgregadaPorTemaEAgenda(tema, interesse), {
         type: Sequelize.QueryTypes.SELECT,
       })
       .then((tweets) => {

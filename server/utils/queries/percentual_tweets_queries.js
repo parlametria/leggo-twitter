@@ -16,6 +16,7 @@ function QueryPercentualAtividadeAgregadaPorAgenda(interesse, dataInicial, dataF
   "INNER JOIN tweet_proposicao ON proposicao.id_proposicao_leggo = tweet_proposicao.id_proposicao_leggo " +
   "INNER JOIN tweet ON tweet_proposicao.id_tweet = tweet.id_tweet AND tweet.created_at BETWEEN '"+
   dataInicial +"' AND '"+ dataFinal + "' " +
+  "AND tweet_proposicao.relator_proposicao = FALSE " +
   "INNER JOIN tema ON tema_proposicao.id_tema = tema.id " +
   "GROUP BY agenda.slug, tweet.id_parlamentar_parlametria) AS res " +
   "WHERE res.slug = '" + interesse + "' ORDER BY total DESC;";
@@ -48,6 +49,7 @@ function QueryPercentualAtividadeAgregadaPorAgendaETema(interesse, tema, dataIni
   "INNER JOIN tweet_proposicao ON proposicao.id_proposicao_leggo = tweet_proposicao.id_proposicao_leggo " +
   "INNER JOIN tweet ON tweet_proposicao.id_tweet = tweet.id_tweet AND tweet.created_at BETWEEN '"+
   dataInicial +"' AND '"+ dataFinal + "' " +
+  "AND tweet_proposicao.relator_proposicao = FALSE " +
   "INNER JOIN tema ON tema_proposicao.id_tema = tema.id " +
   "GROUP BY tema.slug, agenda.slug, tweet.id_parlamentar_parlametria) AS res) AS tt " +
   "where tt.tema_slug = '" + tema + "';";

@@ -21,7 +21,7 @@ const {
 const Tweet = models.tweet;
 
 const {
-  QueryAtividadeAgregadaPorTema
+  QueryAtividadeAgregadaPorTemaEAgenda
 } = require("../utils/queries/tweets_queries");
 const tweet = require("../models/tweet");
 
@@ -76,7 +76,7 @@ router.get("/media", (req, res) => {
       .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
   } else {
     models.sequelize
-      .query(QueryAtividadeAgregadaPorTema(tema, interesse), {
+      .query(QueryAtividadeAgregadaPorTemaEAgenda(tema, interesse), {
         type: Sequelize.QueryTypes.SELECT,
       })
       .then((tweets) => {
