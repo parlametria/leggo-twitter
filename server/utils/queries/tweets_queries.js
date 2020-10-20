@@ -1,7 +1,7 @@
 function QueryAtividadeAgregadaPorAgenda(interesse, dataInicial, dataFinal) {
   const q = "SELECT " +
   "tweet.id_parlamentar_parlametria, " +
-  "COUNT(tweet.id_parlamentar_parlametria) AS atividade_twitter " +
+  "COUNT(DISTINCT(tweet.id_tweet)) AS atividade_twitter " +
   "FROM tema_proposicao "+
   "INNER JOIN proposicao ON tema_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
   "INNER JOIN agenda_proposicao ON agenda_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
@@ -20,7 +20,7 @@ function QueryAtividadeAgregadaPorAgenda(interesse, dataInicial, dataFinal) {
 function QueryAtividadeAgregadaPorTemaEAgenda(tema, interesse, dataInicial, dataFinal) {
   const q = "SELECT " +
   "tweet.id_parlamentar_parlametria, " +
-  "COUNT(tweet.id_parlamentar_parlametria) AS atividade_twitter " +
+  "COUNT(DISTINCT(tweet.id_tweet)) AS atividade_twitter " +
   "FROM tema_proposicao "+
   "INNER JOIN proposicao ON tema_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
   "INNER JOIN agenda_proposicao ON agenda_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +

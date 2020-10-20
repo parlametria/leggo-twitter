@@ -7,7 +7,7 @@ function QueryPercentualAtividadeAgregadaPorAgenda(interesse, dataInicial, dataF
   "SUM(res.atividade_twitter) OVER (PARTITION BY res.slug, res.id_parlamentar_parlametria) AS total FROM (" +
   "SELECT " +
   "agenda.slug AS slug, " +
-  "COUNT(tweet.id_tweet) AS atividade_twitter, " +
+  "COUNT(DISTINCT(tweet.id_tweet)) AS atividade_twitter, " +
   "tweet.id_parlamentar_parlametria AS id_parlamentar_parlametria " +
   "FROM tema_proposicao "+
   "INNER JOIN proposicao ON tema_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
@@ -41,7 +41,7 @@ function QueryPercentualAtividadeAgregadaPorAgendaETema(interesse, tema, dataIni
   "SELECT " +
   "agenda.slug, tema.slug AS tema_slug, " +
   "tweet.id_parlamentar_parlametria AS id_parlamentar_parlametria, " +
-  "COUNT(tweet.id_tweet) AS atividade_twitter " +
+  "COUNT(DISTINCT(tweet.id_tweet)) AS atividade_twitter " +
   "FROM tema_proposicao "+
   "INNER JOIN proposicao ON tema_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
   "INNER JOIN agenda_proposicao ON agenda_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
