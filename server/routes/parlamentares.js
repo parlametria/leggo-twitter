@@ -21,16 +21,16 @@ const {
 const Tweet = models.tweet;
 
 const {
+  QueryAtividadeAgregadaPorAgenda,
   QueryAtividadeAgregadaPorTemaEAgenda
 } = require("../utils/queries/tweets_queries");
-const tweet = require("../models/tweet");
 
 router.get("/media", (req, res) => {
 
   const tema = req.query.tema;
   const interesse = "congresso-remoto"; //req.query.interesse;
 
-   // mes - dia - ano
+  // mes - dia - ano
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
 
@@ -40,56 +40,43 @@ router.get("/media", (req, res) => {
   let diferenca_meses = Math.trunc(
     Math.abs(
       moment(dataFinalFormat).diff(moment(dataInicialFormat), "months", true)
-      )
+    )
   );
 
-  if(diferenca_meses === 0) {
+  if (diferenca_meses === 0) {
     diferenca_meses = 1;
   }
 
-  let whereClause = {
-    created_at: {
-      [Sequelize.Op.between]: [dataInicial, dataFinal]
-    }
+  let query;
+  if (typeof tema === "undefined" || tema === "") {
+    query = QueryAtividadeAgregadaPorAgenda(
+      interesse,
+      dataInicial,
+      dataFinal
+    );
+  } else {
+    query = QueryAtividadeAgregadaPorTemaEAgenda(
+      tema,
+      interesse,
+      dataInicial,
+      dataFinal
+    );
   }
 
-  if (typeof tema === "undefined" || tema === "") {
-    Tweet.findAll({
-      group: ["id_parlamentar_parlametria"],
-      attributes: [
-        "id_parlamentar_parlametria",
-        [
-          Sequelize.fn('COUNT', Sequelize.col("id_parlamentar_parlametria")),
-          'atividade_twitter'
-        ],
-      ],
-      where: whereClause
+  models.sequelize
+    .query(query, {
+      type: Sequelize.QueryTypes.SELECT,
     })
-      .then((tweets) => {
-        const result = tweets.map(tweets => {
-          let data = tweets.toJSON();
-          data['media_tweets'] = data['atividade_twitter'] / diferenca_meses;
-          return data;
-        });
-        res.status(status.SUCCESS).json(result);
-      })
-      .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
-  } else {
-    models.sequelize
-      .query(QueryAtividadeAgregadaPorTemaEAgenda(tema, interesse), {
-        type: Sequelize.QueryTypes.SELECT,
-      })
-      .then((tweets) => {
-        tweets = tweets.map((t) => {
-          t.atividade_twitter = parseInt(t.atividade_twitter);
-          t['media_tweets'] = t['atividade_twitter'] / diferenca_meses;
-          return t;
-        });
-        res.status(status.SUCCESS).json(tweets);
-      })
-      .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
-  }
-  });
+    .then((tweets) => {
+      tweets = tweets.map((t) => {
+        t.atividade_twitter = parseInt(t.atividade_twitter);
+        t['media_tweets'] = t['atividade_twitter'] / diferenca_meses;
+        return t;
+      });
+      res.status(status.SUCCESS).json(tweets);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
+});
 
 // percentual de atividade por tema
 // datas teste: 2018-01-01 a 2020-10-01
