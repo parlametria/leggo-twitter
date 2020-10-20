@@ -164,6 +164,29 @@ router.get("/engajamento", (req, res) => {
     .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
 });
 
+router.get("/username/:id_parlamentar", (req, res) => {
+  const id_parlamentar = req.params.id_parlamentar;
+
+  Tweet.findAll({
+    attributes: [
+      "id_parlamentar_parlametria",
+      "username"
+    ],
+    where: {
+      id_parlamentar_parlametria: id_parlamentar
+    }
+  })
+    .then((tweets) => {
+
+      const data = {
+        "username": tweets[0].username
+      };
+
+      res.status(status.SUCCESS).json(data);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
+});
+
 router.get("/:id_parlamentar", (req, res) => {
   const id_parlamentar = req.params.id_parlamentar;
 
