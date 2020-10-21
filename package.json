@@ -27,6 +27,7 @@
     "express": "^4.17.1",
     "force-ssl-heroku": "^1.0.2",
     "heroku-logger": "^0.3.3",
+    "moment": "^2.29.0",
     "pg": "^8.3.3",
     "pg-hstore": "^2.3.3",
     "sequelize": "^4.41.2"

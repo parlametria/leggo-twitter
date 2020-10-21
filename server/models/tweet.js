@@ -6,7 +6,7 @@ module.exports = (sequelize, type) => {
         type: type.STRING,
         primaryKey: true
       },
-      id_parlamentar_parlametria: type.STRING,
+      id_parlamentar_parlametria: type.INTEGER,
       username: type.STRING,
       created_at: type.DATE,
       text: type.STRING,
@@ -25,6 +25,17 @@ module.exports = (sequelize, type) => {
       tableName: "tweet"
     }
   );
+
+  tweet.associate = function(models) {
+    tweet.belongsTo(models.parlamentar, {
+      foreignKey: "id_parlamentar_parlametria"
+    }),
+    tweet.hasMany(models.tweet_proposicao, {
+      foreignKey: "id_tweet",
+      targetKey: "id_tweet",
+      as: "tweet_tweet_proposicao"
+    })
+  }
 
   return tweet;
 };
