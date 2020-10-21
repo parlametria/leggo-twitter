@@ -13,6 +13,10 @@ module.exports = (sequelize, type) => {
       sigla: {
         type: type.STRING,
         primaryKey: true
+      },
+      relator_proposicao: {
+        type: type.BOOLEAN,
+        primaryKey: true
       }
     },
     {

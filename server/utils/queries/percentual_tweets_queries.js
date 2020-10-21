@@ -7,7 +7,7 @@ function QueryPercentualAtividadeAgregadaPorAgenda(interesse, dataInicial, dataF
   "SUM(res.atividade_twitter) OVER (PARTITION BY res.slug, res.id_parlamentar_parlametria) AS total FROM (" +
   "SELECT " +
   "agenda.slug AS slug, " +
-  "COUNT(tweet.id_tweet) AS atividade_twitter, " +
+  "COUNT(DISTINCT(tweet.id_tweet)) AS atividade_twitter, " +
   "tweet.id_parlamentar_parlametria AS id_parlamentar_parlametria " +
   "FROM tema_proposicao "+
   "INNER JOIN proposicao ON tema_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
@@ -16,6 +16,7 @@ function QueryPercentualAtividadeAgregadaPorAgenda(interesse, dataInicial, dataF
   "INNER JOIN tweet_proposicao ON proposicao.id_proposicao_leggo = tweet_proposicao.id_proposicao_leggo " +
   "INNER JOIN tweet ON tweet_proposicao.id_tweet = tweet.id_tweet AND tweet.created_at BETWEEN '"+
   dataInicial +"' AND '"+ dataFinal + "' " +
+  "AND tweet_proposicao.relator_proposicao = FALSE " +
   "INNER JOIN tema ON tema_proposicao.id_tema = tema.id " +
   "GROUP BY agenda.slug, tweet.id_parlamentar_parlametria) AS res " +
   "WHERE res.slug = '" + interesse + "' ORDER BY total DESC;";
@@ -40,7 +41,7 @@ function QueryPercentualAtividadeAgregadaPorAgendaETema(interesse, tema, dataIni
   "SELECT " +
   "agenda.slug, tema.slug AS tema_slug, " +
   "tweet.id_parlamentar_parlametria AS id_parlamentar_parlametria, " +
-  "COUNT(tweet.id_tweet) AS atividade_twitter " +
+  "COUNT(DISTINCT(tweet.id_tweet)) AS atividade_twitter " +
   "FROM tema_proposicao "+
   "INNER JOIN proposicao ON tema_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
   "INNER JOIN agenda_proposicao ON agenda_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
@@ -48,6 +49,7 @@ function QueryPercentualAtividadeAgregadaPorAgendaETema(interesse, tema, dataIni
   "INNER JOIN tweet_proposicao ON proposicao.id_proposicao_leggo = tweet_proposicao.id_proposicao_leggo " +
   "INNER JOIN tweet ON tweet_proposicao.id_tweet = tweet.id_tweet AND tweet.created_at BETWEEN '"+
   dataInicial +"' AND '"+ dataFinal + "' " +
+  "AND tweet_proposicao.relator_proposicao = FALSE " +
   "INNER JOIN tema ON tema_proposicao.id_tema = tema.id " +
   "GROUP BY tema.slug, agenda.slug, tweet.id_parlamentar_parlametria) AS res) AS tt " +
   "where tt.tema_slug = '" + tema + "';";
