@@ -2,7 +2,7 @@
 function QueryEngajamentoAgregadoPorAgenda(interesse, dataInicial, dataFinal) {
   const q = "SELECT " +
   "tweet.id_parlamentar_parlametria AS id_parlamentar_parlametria, " +
-  "SUM(tweet.interactions) AS engajamento " +
+  "AVG(tweet.interactions) AS engajamento " +
   "FROM tema_proposicao "+
   "INNER JOIN proposicao ON tema_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
   "INNER JOIN agenda_proposicao ON agenda_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
@@ -20,7 +20,7 @@ function QueryEngajamentoAgregadoPorAgendaETema(interesse, tema, dataInicial, da
   const q = "SELECT " +
   "tema.slug AS tema_slug, " +
   "tweet.id_parlamentar_parlametria AS id_parlamentar_parlametria, " +
-  "SUM(tweet.interactions) AS engajamento " +
+  "AVG(tweet.interactions) AS engajamento " +
   "FROM tema_proposicao "+
   "INNER JOIN proposicao ON tema_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
   "INNER JOIN agenda_proposicao ON agenda_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
