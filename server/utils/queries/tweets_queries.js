@@ -58,6 +58,17 @@ function QueryTweetsPorTemaEAgenda(idParlamentar, tema, interesse, dataInicial, 
   return q;
 }
 
+function QueryTweetsInfo() {
+  const q = "SELECT " +
+  "COUNT(DISTINCT(tweet.id_parlamentar_parlametria)) as total_parlamentares, " +
+  "COUNT(DISTINCT(tweet.id_tweet)) as total_tweets, " +
+  "MIN(tweet.created_at) as data_inicial, " +
+  "MAX(tweet.created_at) as data_final " +
+  "FROM tweet"
+  return q;
+}
+
 module.exports = { QueryAtividadeAgregadaPorAgenda,
                     QueryAtividadeAgregadaPorTemaEAgenda,
-                    QueryTweetsPorTemaEAgenda }
+                    QueryTweetsPorTemaEAgenda,
+                    QueryTweetsInfo }
