@@ -12,7 +12,8 @@ const calculaMaxAtividade = require("../utils/functions");
 const {
   QueryAtividadeAgregadaPorAgenda,
   QueryAtividadeAgregadaPorTemaEAgenda,
-  QueryTweetsPorTemaEAgenda
+  QueryTweetsPorTemaEAgenda,
+  QueryTweetsInfo
 } = require("../utils/queries/tweets_queries");
 
 const Tweet = models.tweet;
@@ -119,6 +120,18 @@ router.get("/:id_parlamentar/texto", (req, res) => {
     })
     .then((tweets) => {
       res.status(status.SUCCESS).json(tweets);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err: err.message }));
+});
+
+// Recupera informações sobre a base de dados de tweets
+router.get("/info", (req, res) => {
+  models.sequelize
+    .query(QueryTweetsInfo(), {
+      type: Sequelize.QueryTypes.SELECT,
+    })
+    .then((info) => {
+      res.status(status.SUCCESS).json(info[0]);
     })
     .catch((err) => res.status(status.BAD_REQUEST).json({ err: err.message }));
 });
