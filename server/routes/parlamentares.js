@@ -82,7 +82,7 @@ router.get("/media", (req, res) => {
 // datas teste: 2018-01-01 a 2020-10-01
 // ano-mes-dia
 router.get("/percentual_atividade_agenda", (req, res) => {
-  const agenda = "congresso-remoto"; // req.query.interesse;
+  const agenda = req.query.interesse || 'leggo';
   const tema = req.query.tema;
 
   let dataInicial = req.query.data_inicial;

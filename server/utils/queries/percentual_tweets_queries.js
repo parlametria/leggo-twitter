@@ -1,10 +1,9 @@
 
 function QueryPercentualAtividadeAgregadaPorAgenda(interesse, dataInicial, dataFinal) {
-  const q = "SELECT " +
+  const q = "SELECT * FROM (SELECT " +
   "res.atividade_twitter AS atividade_twitter,  " +
   "res.slug, " +
-  "res.id_parlamentar_parlametria, " +
-  "SUM(res.atividade_twitter) OVER (PARTITION BY res.slug, res.id_parlamentar_parlametria) AS total FROM (" +
+  "res.id_parlamentar_parlametria FROM (" +
   "SELECT " +
   "agenda.slug AS slug, " +
   "COUNT(DISTINCT(tweet.id_tweet)) AS atividade_twitter, " +
@@ -19,7 +18,13 @@ function QueryPercentualAtividadeAgregadaPorAgenda(interesse, dataInicial, dataF
   "AND tweet_proposicao.relator_proposicao = FALSE " +
   "INNER JOIN tema ON tema_proposicao.id_tema = tema.id " +
   "GROUP BY agenda.slug, tweet.id_parlamentar_parlametria) AS res " +
-  "WHERE res.slug = '" + interesse + "' ORDER BY total DESC;";
+  "WHERE res.slug = '" + interesse + "') AS res " +
+  "INNER JOIN (SELECT tweet.id_parlamentar_parlametria AS id_parlamentar_parlametria, " +
+  "COUNT(DISTINCT(tweet.id_tweet)) AS total " +
+  "FROM tweet AS tweet " +
+  "WHERE tweet.created_at BETWEEN '" + dataInicial +"' AND '"+ dataFinal + "' " +
+  "GROUP BY id_parlamentar_parlametria) AS tweet_todos " +
+  "ON res.id_parlamentar_parlametria = tweet_todos.id_parlamentar_parlametria;";
 
   return q;
 }
