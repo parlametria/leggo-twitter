@@ -140,10 +140,13 @@ router.get("/username/:id_parlamentar", (req, res) => {
   })
     .then((tweets) => {
 
-      const data = {
-        "username": tweets[0].username,
-        "total_tweets": tweets.length
-      };
+      let data = {};
+      if (tweets.length > 0) {
+        data = {
+          "username": tweets[0].username,
+          "total_tweets": tweets.length
+        };
+      }
 
       res.status(status.SUCCESS).json(data);
     })
