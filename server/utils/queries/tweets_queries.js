@@ -68,7 +68,20 @@ function QueryTweetsInfo() {
   return q;
 }
 
+function QueryAtividadeAgregada(dataInicial, dataFinal) {
+  const q = "SELECT " +
+  "tweet.id_parlamentar_parlametria, " +
+  "COUNT(DISTINCT(tweet.id_tweet)) AS atividade_twitter " +
+  "FROM tweet "+
+  "WHERE tweet.created_at BETWEEN '"+
+  dataInicial +"' AND '"+ dataFinal + "' " +
+  "GROUP BY tweet.id_parlamentar_parlametria;";
+
+  return q;
+}
+
 module.exports = { QueryAtividadeAgregadaPorAgenda,
                     QueryAtividadeAgregadaPorTemaEAgenda,
+                    QueryAtividadeAgregada,
                     QueryTweetsPorTemaEAgenda,
                     QueryTweetsInfo }

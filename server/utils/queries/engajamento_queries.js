@@ -35,6 +35,19 @@ function QueryEngajamentoAgregadoPorAgendaETema(interesse, tema, dataInicial, da
   return q;
 }
 
+function QueryEngajamentoAgregado(dataInicial, dataFinal) {
+  const q = "SELECT " +
+  "tweet.id_parlamentar_parlametria AS id_parlamentar_parlametria, " +
+  "AVG(tweet.interactions) AS engajamento " +
+  "FROM tweet "+
+  "WHERE tweet.created_at BETWEEN '"+
+  dataInicial +"' AND '"+ dataFinal + "' " +
+  "GROUP BY tweet.id_parlamentar_parlametria;";
+
+  return q;
+}
+
 module.exports = {
   QueryEngajamentoAgregadoPorAgenda,
-  QueryEngajamentoAgregadoPorAgendaETema }
+  QueryEngajamentoAgregadoPorAgendaETema,
+  QueryEngajamentoAgregado }
