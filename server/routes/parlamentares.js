@@ -31,14 +31,14 @@ router.get("/media", (req, res) => {
   dataFinalFormat = moment(dataInicial).format("YYYY-MM-DD");
   dataInicialFormat = moment(dataFinal).format("YYYY-MM-DD");
 
-  let diferenca_meses = Math.trunc(
+  let diferenca_semanas = Math.trunc(
     Math.abs(
-      moment(dataFinalFormat).diff(moment(dataInicialFormat), "months", true)
+      moment(dataFinalFormat).diff(moment(dataInicialFormat), "weeks", true)
     )
   );
 
-  if (diferenca_meses === 0) {
-    diferenca_meses = 1;
+  if (diferenca_semanas === 0) {
+    diferenca_semanas = 1;
   }
 
   const query = QueryAtividadeAgregada(dataInicial, dataFinal);
@@ -50,7 +50,7 @@ router.get("/media", (req, res) => {
     .then((tweets) => {
       tweets = tweets.map((t) => {
         t.atividade_twitter = parseInt(t.atividade_twitter);
-        t['media_tweets'] = t['atividade_twitter'] / diferenca_meses;
+        t['media_tweets'] = t['atividade_twitter'] / diferenca_semanas;
         return t;
       });
       res.status(status.SUCCESS).json(tweets);
