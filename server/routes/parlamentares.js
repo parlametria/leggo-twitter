@@ -23,7 +23,7 @@ const {
   QueryAtividadeAgregada
 } = require("../utils/queries/tweets_queries");
 
-// Formato da data YYYY-MM-DD
+// Formato da data YYYY-MM-DD 
 router.get("/media", (req, res) => {
   const dataInicial = req.query.data_inicial;
   const dataFinal = req.query.data_final;
