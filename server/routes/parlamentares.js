@@ -87,8 +87,6 @@ router.get("/percentual_atividade_agenda", (req, res) => {
     );
   }
 
-  console.log(query)
-
   models.sequelize
     .query(query, {
       type: Sequelize.QueryTypes.SELECT,
