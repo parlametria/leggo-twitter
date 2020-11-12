@@ -18,7 +18,7 @@ const {
   QueryAtividadeAgregada
 } = require("../utils/queries/tweets_queries");
 
-// Formato da data YYYY-MM-DD
+// Formato da data YYYY-MM-DD 
 router.get("/media", (req, res) => {
   const dataInicial = req.query.data_inicial;
   const dataFinal = req.query.data_final;
@@ -26,14 +26,14 @@ router.get("/media", (req, res) => {
   dataFinalFormat = moment(dataInicial).format("YYYY-MM-DD");
   dataInicialFormat = moment(dataFinal).format("YYYY-MM-DD");
 
-  let diferenca_meses = Math.trunc(
+  let diferenca_semanas = Math.trunc(
     Math.abs(
-      moment(dataFinalFormat).diff(moment(dataInicialFormat), "months", true)
+      moment(dataFinalFormat).diff(moment(dataInicialFormat), "weeks", true)
     )
   );
 
-  if (diferenca_meses === 0) {
-    diferenca_meses = 1;
+  if (diferenca_semanas === 0) {
+    diferenca_semanas = 1;
   }
 
   const query = QueryAtividadeAgregada(dataInicial, dataFinal);
