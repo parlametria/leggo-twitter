@@ -9,11 +9,6 @@ const status = require("../config/status");
 const models = require("../models/index");
 
 const {
-  QueryPercentualAtividadeAgregadaPorAgenda,
-  QueryPercentualAtividadeAgregadaPorAgendaETema,
-} = require("../utils/queries/percentual_tweets_queries");
-
-const {
   QueryEngajamentoAgregado
 } = require("../utils/queries/engajamento_queries");
 
@@ -49,57 +44,10 @@ router.get("/media", (req, res) => {
     })
     .then((tweets) => {
       tweets = tweets.map((t) => {
-        t.atividade_twitter = parseInt(t.atividade_twitter);
-        t['media_tweets'] = t['atividade_twitter'] / diferenca_semanas;
+        t.atividade_total_twitter = parseInt(t.atividade_total_twitter);
+        t['media_tweets'] = t['atividade_total_twitter'] / diferenca_meses;
         return t;
       });
-      res.status(status.SUCCESS).json(tweets);
-    })
-    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
-});
-
-// percentual de atividade por tema
-// datas teste: 2018-01-01 a 2020-10-01
-// ano-mes-dia
-router.get("/percentual_atividade_agenda", (req, res) => {
-  const agenda = req.query.interesse || 'leggo';
-  const tema = req.query.tema;
-
-  let dataInicial = req.query.data_inicial;
-  let dataFinal = req.query.data_final;
-
-  dataInicial = moment(dataInicial).format("YYYY-MM-DD");
-  dataFinal = moment(dataFinal).format("YYYY-MM-DD");
-
-  let query;
-  if (typeof tema === "undefined" || tema === "") {
-    query = QueryPercentualAtividadeAgregadaPorAgenda(
-      agenda,
-      dataInicial,
-      dataFinal
-    );
-  } else {
-    query = QueryPercentualAtividadeAgregadaPorAgendaETema(
-      agenda,
-      tema,
-      dataInicial,
-      dataFinal
-    );
-  }
-
-  console.log(query)
-
-  models.sequelize
-    .query(query, {
-      type: Sequelize.QueryTypes.SELECT,
-    })
-    .then((tweets) => {
-      tweets = tweets.map((t) => {
-        t.atividade_twitter = parseInt(t.atividade_twitter);
-        t.percentual_atividade_twitter = t.atividade_twitter / t.total;
-        return t;
-      });
-
       res.status(status.SUCCESS).json(tweets);
     })
     .catch((err) => res.status(status.BAD_REQUEST).json({ err }));

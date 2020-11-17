@@ -20,10 +20,13 @@ const Tweet = models.tweet;
 
 router.get("/parlamentares", (req, res) => {
   const tema = req.query.tema;
-  const interesse = "congresso-remoto"; //req.query.interesse;
+  const interesse = req.query.interesse;
 
-  const dataInicial = moment(new Date("01-02-2019")).format("YYYY-MM-DD");
-  const dataFinal = moment(new Date()).format("YYYY-MM-DD");
+  let dataInicial = req.query.data_inicial;
+  let dataFinal = req.query.data_final;
+
+  dataInicial = moment(dataInicial).format("YYYY-MM-DD");
+  dataFinal = moment(dataFinal).format("YYYY-MM-DD");
 
   let query;
   if (typeof tema === "undefined" || tema === "") {
@@ -54,10 +57,13 @@ router.get("/parlamentares", (req, res) => {
 router.get("/parlamentares/:id_parlamentar", (req, res) => {
   const id_parlamentar = req.params.id_parlamentar;
   const tema = req.query.tema;
-  const interesse = "congresso-remoto"; //req.query.interesse;
+  const interesse = req.query.interesse;
 
-  const dataInicial = moment(new Date("01-02-2019")).format("YYYY-MM-DD");
-  const dataFinal = moment(new Date()).format("YYYY-MM-DD");
+  let dataInicial = req.query.data_inicial;
+  let dataFinal = req.query.data_final;
+
+  dataInicial = moment(dataInicial).format("YYYY-MM-DD");
+  dataFinal = moment(dataFinal).format("YYYY-MM-DD");
 
   let query;
   if (typeof tema === "undefined" || tema === "") {
