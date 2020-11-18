@@ -9,59 +9,34 @@ const status = require("../config/status");
 const models = require("../models/index");
 
 const {
-  QueryPercentualAtividadeAgregadaPorAgenda,
-  QueryPercentualAtividadeAgregadaPorAgendaETema,
-} = require("../utils/queries/percentual_tweets_queries");
-
-const {
-  QueryEngajamentoAgregadoPorAgenda,
-  QueryEngajamentoAgregadoPorAgendaETema
+  QueryEngajamentoAgregado
 } = require("../utils/queries/engajamento_queries");
 
 const Tweet = models.tweet;
 
 const {
-  QueryAtividadeAgregadaPorAgenda,
-  QueryAtividadeAgregadaPorTemaEAgenda
+  QueryAtividadeAgregada
 } = require("../utils/queries/tweets_queries");
 
+// Formato da data YYYY-MM-DD
 router.get("/media", (req, res) => {
+  const dataInicial = req.query.data_inicial;
+  const dataFinal = req.query.data_final;
 
-  const tema = req.query.tema;
-  const interesse = "congresso-remoto"; //req.query.interesse;
+  dataFinalFormat = moment(dataInicial).format("YYYY-MM-DD");
+  dataInicialFormat = moment(dataFinal).format("YYYY-MM-DD");
 
-  // mes - dia - ano
-  let dataInicial = req.query.data_inicial;
-  let dataFinal = req.query.data_final;
-
-  var dataInicialFormat = new Date(dataInicial);
-  var dataFinalFormat = new Date(dataFinal);
-
-  let diferenca_meses = Math.trunc(
+  let diferenca_semanas = Math.trunc(
     Math.abs(
-      moment(dataFinalFormat).diff(moment(dataInicialFormat), "months", true)
+      moment(dataFinalFormat).diff(moment(dataInicialFormat), "weeks", true)
     )
   );
 
-  if (diferenca_meses === 0) {
-    diferenca_meses = 1;
+  if (diferenca_semanas === 0) {
+    diferenca_semanas = 1;
   }
 
-  let query;
-  if (typeof tema === "undefined" || tema === "") {
-    query = QueryAtividadeAgregadaPorAgenda(
-      interesse,
-      dataInicial,
-      dataFinal
-    );
-  } else {
-    query = QueryAtividadeAgregadaPorTemaEAgenda(
-      tema,
-      interesse,
-      dataInicial,
-      dataFinal
-    );
-  }
+  const query = QueryAtividadeAgregada(dataInicial, dataFinal);
 
   models.sequelize
     .query(query, {
@@ -69,8 +44,8 @@ router.get("/media", (req, res) => {
     })
     .then((tweets) => {
       tweets = tweets.map((t) => {
-        t.atividade_twitter = parseInt(t.atividade_twitter);
-        t['media_tweets'] = t['atividade_twitter'] / diferenca_meses;
+        t.atividade_total_twitter = parseInt(t.atividade_total_twitter);
+        t['media_tweets'] = t['atividade_total_twitter'] / diferenca_semanas;
         return t;
       });
       res.status(status.SUCCESS).json(tweets);
@@ -78,80 +53,15 @@ router.get("/media", (req, res) => {
     .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
 });
 
-// percentual de atividade por tema
-// datas teste: 2018-01-01 a 2020-10-01
-// ano-mes-dia
-router.get("/percentual_atividade_agenda", (req, res) => {
-  const agenda = "congresso-remoto"; // req.query.interesse;
-  const tema = req.query.tema;
-
-  let dataInicial = req.query.data_inicial;
-  let dataFinal = req.query.data_final;
-
-  dataInicial = moment(dataInicial).format("YYYY-MM-DD");
-  dataFinal = moment(dataFinal).format("YYYY-MM-DD");
-
-  let query;
-  if (typeof tema === "undefined" || tema === "") {
-    query = QueryPercentualAtividadeAgregadaPorAgenda(
-      agenda,
-      dataInicial,
-      dataFinal
-    );
-  } else {
-    query = QueryPercentualAtividadeAgregadaPorAgendaETema(
-      agenda,
-      tema,
-      dataInicial,
-      dataFinal
-    );
-  }
-
-  console.log(query)
-
-  models.sequelize
-    .query(query, {
-      type: Sequelize.QueryTypes.SELECT,
-    })
-    .then((tweets) => {
-      tweets = tweets.map((t) => {
-        t.atividade_twitter = parseInt(t.atividade_twitter);
-        t.percentual_atividade_twitter = t.atividade_twitter / t.total;
-        return t;
-      });
-
-      res.status(status.SUCCESS).json(tweets);
-    })
-    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
-});
-
+// Formato da data YYYY-MM-DD
 router.get("/engajamento", (req, res) => {
-  const agenda = "congresso-remoto"; // req.query.interesse;
-  const tema = req.query.tema;
-
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
 
   dataInicial = moment(dataInicial).format("YYYY-MM-DD");
   dataFinal = moment(dataFinal).format("YYYY-MM-DD");
 
-  let query;
-  if (typeof tema === "undefined" || tema === "") {
-    query = QueryEngajamentoAgregadoPorAgenda(
-      agenda,
-      dataInicial,
-      dataFinal
-    );
-  } else {
-    query = QueryEngajamentoAgregadoPorAgendaETema(
-      agenda,
-      tema,
-      dataInicial,
-      dataFinal
-    );
-  }
-
-  console.log(query)
+  const query = QueryEngajamentoAgregado(dataInicial, dataFinal)
 
   models.sequelize
     .query(query, {
@@ -178,9 +88,13 @@ router.get("/username/:id_parlamentar", (req, res) => {
   })
     .then((tweets) => {
 
-      const data = {
-        "username": tweets[0].username
-      };
+      let data = {};
+      if (tweets.length > 0) {
+        data = {
+          "username": tweets[0].username,
+          "total_tweets": tweets.length
+        };
+      }
 
       res.status(status.SUCCESS).json(data);
     })
