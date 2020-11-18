@@ -18,7 +18,7 @@ const {
   QueryAtividadeAgregada
 } = require("../utils/queries/tweets_queries");
 
-// Formato da data YYYY-MM-DD 
+// Formato da data YYYY-MM-DD
 router.get("/media", (req, res) => {
   const dataInicial = req.query.data_inicial;
   const dataFinal = req.query.data_final;
@@ -45,7 +45,7 @@ router.get("/media", (req, res) => {
     .then((tweets) => {
       tweets = tweets.map((t) => {
         t.atividade_total_twitter = parseInt(t.atividade_total_twitter);
-        t['media_tweets'] = t['atividade_total_twitter'] / diferenca_meses;
+        t['media_tweets'] = t['atividade_total_twitter'] / diferenca_semanas;
         return t;
       });
       res.status(status.SUCCESS).json(tweets);
