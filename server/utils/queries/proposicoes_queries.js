@@ -31,7 +31,7 @@ function QueryProposicoesComMaisTweetsPorTemaEParlamentar(tema, interesse, dataI
     "GROUP BY tweet_proposicao.id_proposicao_leggo " +
     "HAVING COUNT(tweet_proposicao.id_tweet) > 0 " +
     "ORDER BY num_tweets DESC " +
-    "LIMIT '" + qtd + "' ";
+    "LIMIT " + qtd + " ";
   ;
   return q;
 }
