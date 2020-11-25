@@ -26,6 +26,7 @@ function QueryProposicoesComMaisTweetsPorTemaEParlamentar(tema, interesse, dataI
     "AND tweet.created_at BETWEEN '" + dataInicial + "' AND '" + dataFinal + "' " +
     "INNER JOIN agenda_proposicao ON agenda_proposicao.id_proposicao_leggo = tweet_proposicao.id_proposicao_leggo " +
     "INNER JOIN agenda ON agenda_proposicao.id_agenda = agenda.id AND agenda.slug = '" + interesse + "' " +
+    "INNER JOIN tema_proposicao on tweet_proposicao.id_proposicao_leggo = tema_proposicao.id_proposicao_leggo " +
     "INNER JOIN tema ON tema_proposicao.id_tema = tema.id AND tema.slug = '" + tema + "' " +
     "GROUP BY tweet_proposicao.id_proposicao_leggo " +
     "HAVING COUNT(tweet_proposicao.id_tweet) > 0 " +
