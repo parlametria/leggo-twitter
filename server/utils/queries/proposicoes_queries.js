@@ -18,7 +18,7 @@ function QueryProposicoesComMaisTweetsPorParlamentar(interesse, dataInicial, dat
 
 function QueryProposicoesComMaisTweetsPorTemaEParlamentar(tema, interesse, dataInicial, dataFinal, id_parlamentar, qtd) {
   const q ="SELECT " +
-    "tweet_proposicao.id_proposicao_leggo, , COUNT(tweet_proposicao.id_tweet) AS num_tweets " + 
+    "tweet_proposicao.id_proposicao_leggo, tweet_proposicao.sigla, COUNT(tweet_proposicao.id_tweet) AS num_tweets " + 
     "FROM " + 
     "tweet_proposicao " +
     "INNER JOIN tweet ON tweet_proposicao.id_tweet = tweet.id_tweet " +
@@ -28,10 +28,10 @@ function QueryProposicoesComMaisTweetsPorTemaEParlamentar(tema, interesse, dataI
     "INNER JOIN agenda ON agenda_proposicao.id_agenda = agenda.id AND agenda.slug = '" + interesse + "' " +
     "INNER JOIN tema_proposicao on tweet_proposicao.id_proposicao_leggo = tema_proposicao.id_proposicao_leggo " +
     "INNER JOIN tema ON tema_proposicao.id_tema = tema.id AND tema.slug = '" + tema + "' " +
-    "GROUP BY tweet_proposicao.id_proposicao_leggo " +
+    "GROUP BY tweet_proposicao.id_proposicao_leggo,  tweet_proposicao.sigla " +
     "HAVING COUNT(tweet_proposicao.id_tweet) > 0 " +
     "ORDER BY num_tweets DESC " +
-    "LIMIT '" + qtd + "' ";
+    "LIMIT " + qtd + " ";
   ;
   return q;
 }
