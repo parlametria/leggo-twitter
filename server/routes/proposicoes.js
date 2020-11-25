@@ -24,10 +24,6 @@ router.get("/parlamentar/:id", (req, res) => {
   const tema = req.query.tema;
   let interesse = req.query.interesse;
 
-  if (typeof interesse === "undefined" || interesse === "") {
-    interesse = "leggo";
-  }
-
   let query;
   if (typeof tema === "undefined" || tema === "") {
     query = QueryProposicoesComMaisTweetsPorParlamentar(
