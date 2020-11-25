@@ -22,7 +22,11 @@ router.get("/parlamentar/:id", (req, res) => {
   dataFinal = moment(dataFinal).format("YYYY-MM-DD");
 
   const tema = req.query.tema;
-  const interesse = req.query.interesse;
+  let interesse = req.query.interesse;
+
+  if (typeof interesse === "undefined" || interesse === "") {
+    interesse = "leggo";
+  }
 
   let query;
   if (typeof tema === "undefined" || tema === "") {
