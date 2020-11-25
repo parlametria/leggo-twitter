@@ -24,6 +24,12 @@ router.get("/parlamentar/:id", (req, res) => {
   const tema = req.query.tema;
   let interesse = req.query.interesse;
 
+  if (typeof qtd === "undefined" || qtd === "") {
+    qtd = "ALL";
+  } else {
+    qtd = "'" + qtd + "'";
+  }
+
   let query;
   if (typeof tema === "undefined" || tema === "") {
     query = QueryProposicoesComMaisTweetsPorParlamentar(
@@ -52,7 +58,6 @@ router.get("/parlamentar/:id", (req, res) => {
       res.status(status.SUCCESS).json(tweets);
     })
     .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
-  ///res.status(200).json({ dataInicial: dataInicial, dataFinal: dataFinal, id: id, qtde: qtde });
 });
 
 module.exports = router;
