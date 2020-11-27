@@ -50,6 +50,15 @@ router.get("/parlamentar/:id", (req, res) => {
       qtd
     );
   }
+
+  models.sequelize
+    .query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    })
+    .then((tweets) => {
+      res.status(status.SUCCESS).json(tweets);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
 });
 
 router.get("/mais-comentadas", (req, res) => {
@@ -72,6 +81,7 @@ router.get("/mais-comentadas", (req, res) => {
     dataFinal,
     qtd
   );
+
   models.sequelize
     .query(query, {
       type: Sequelize.QueryTypes.SELECT,
