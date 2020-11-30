@@ -42,7 +42,7 @@ function QueryProposicoesComMaisTweetsPorAgenda(interesse, dataInicial, dataFina
   const q =`SELECT
       tweet_proposicao.id_proposicao_leggo,
       proposicao.sigla,
-      COUNT(DISTINCT(tweet_proposicao.id_tweet)) AS num_tweets
+      COUNT(DISTINCT(tweet.id_parlamentar_parlametria)) AS num_parlamentares_tweets
     FROM
       tweet_proposicao
       INNER JOIN tweet ON tweet_proposicao.id_tweet = tweet.id_tweet
@@ -50,9 +50,9 @@ function QueryProposicoesComMaisTweetsPorAgenda(interesse, dataInicial, dataFina
       INNER JOIN proposicao ON tweet_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo
       INNER JOIN agenda_proposicao ON agenda_proposicao.id_proposicao_leggo = tweet_proposicao.id_proposicao_leggo
       INNER JOIN agenda ON agenda_proposicao.id_agenda = agenda.id AND agenda.slug = '${interesse}'
+    AND tweet_proposicao.relator_proposicao = FALSE
     GROUP BY tweet_proposicao.id_proposicao_leggo,  proposicao.sigla
-    HAVING COUNT(tweet_proposicao.id_tweet) > 0
-    ORDER BY num_tweets DESC
+    ORDER BY num_parlamentares_tweets DESC
     LIMIT ${qtd};`
     ;
   return q;
