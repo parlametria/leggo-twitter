@@ -37,7 +37,7 @@ function QueryAtividadeAgregadaPorTemaEAgenda(tema, interesse, dataInicial, data
 }
 
 // Se tema for undefined então todos os temas serão considerados
-function QueryTweetsPorTemaEAgenda(idParlamentar, tema, interesse, dataInicial, dataFinal, limit) {
+function QueryTweetsPorTemaEAgenda(idParlamentar, tema, interesse, dataInicial, dataFinal, limit, destaque) {
   const q = "SELECT " +
   "DISTINCT(tweet.id_tweet), " +
   "tweet.id_parlamentar_parlametria, tweet.created_at, tweet.text, tweet.interactions, " +
@@ -53,6 +53,7 @@ function QueryTweetsPorTemaEAgenda(idParlamentar, tema, interesse, dataInicial, 
   "AND tweet.id_parlamentar_parlametria = '" + idParlamentar + "' " +
   "INNER JOIN tema ON tema_proposicao.id_tema = tema.id " +
   (tema !== undefined ? "AND tema.slug = '" + tema + "' ": "") +
+  (destaque === 'true' ? " AND proposicao.destaque = TRUE " : "") +
   "ORDER BY tweet.interactions DESC" +
   (limit !== undefined ? " LIMIT " + limit + " ": "");
 

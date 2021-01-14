@@ -119,6 +119,7 @@ router.get("/:id_parlamentar/texto", (req, res) => {
   const tema = req.query.tema;
   const interesse = req.query.interesse;
   const limit = req.query.limit;
+  const destaque = req.query.destaque;
 
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
@@ -134,7 +135,8 @@ router.get("/:id_parlamentar/texto", (req, res) => {
     interesse,
     dataInicial,
     dataFinal,
-    limit
+    limit,
+    destaque
   );
 
   models.sequelize
