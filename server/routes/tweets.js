@@ -13,7 +13,8 @@ const {
   QueryAtividadeAgregadaPorAgenda,
   QueryAtividadeAgregadaPorTemaEAgenda,
   QueryTweetsPorTemaEAgenda,
-  QueryTweetsInfo
+  QueryTweetsInfo,
+  QueryAtividadeAgregadaPorAgendaEDestaque
 } = require("../utils/queries/tweets_queries");
 
 const Tweet = models.tweet;
@@ -21,6 +22,7 @@ const Tweet = models.tweet;
 router.get("/parlamentares", (req, res) => {
   const tema = req.query.tema;
   const interesse = req.query.interesse;
+  const destaque = req.query.destaque;
 
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
@@ -29,7 +31,14 @@ router.get("/parlamentares", (req, res) => {
   dataFinal = moment(dataFinal).format("YYYY-MM-DD");
 
   let query;
-  if (typeof tema === "undefined" || tema === "") {
+
+  if (destaque === "true") {
+    query = QueryAtividadeAgregadaPorAgendaEDestaque(
+      interesse,
+      dataInicial,
+      dataFinal
+    );
+  } else if (typeof tema === "undefined" || tema === "") {
     query = QueryAtividadeAgregadaPorAgenda(
       interesse,
       dataInicial,
@@ -58,6 +67,7 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
   const id_parlamentar = req.params.id_parlamentar;
   const tema = req.query.tema;
   const interesse = req.query.interesse;
+  const destaque = req.query.destaque;
 
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
@@ -66,7 +76,14 @@ router.get("/parlamentares/:id_parlamentar", (req, res) => {
   dataFinal = moment(dataFinal).format("YYYY-MM-DD");
 
   let query;
-  if (typeof tema === "undefined" || tema === "") {
+
+  if (destaque === "true") {
+    query = QueryAtividadeAgregadaPorAgendaEDestaque(
+      interesse,
+      dataInicial,
+      dataFinal
+    );
+  } else if (typeof tema === "undefined" || tema === "") {
     query = QueryAtividadeAgregadaPorAgenda(
       interesse,
       dataInicial,
@@ -102,6 +119,7 @@ router.get("/:id_parlamentar/texto", (req, res) => {
   const tema = req.query.tema;
   const interesse = req.query.interesse;
   const limit = req.query.limit;
+  const destaque = req.query.destaque;
 
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
@@ -117,7 +135,8 @@ router.get("/:id_parlamentar/texto", (req, res) => {
     interesse,
     dataInicial,
     dataFinal,
-    limit
+    limit,
+    destaque
   );
 
   models.sequelize

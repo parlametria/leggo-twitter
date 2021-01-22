@@ -1,4 +1,4 @@
-function QueryProposicoesComMaisTweetsPorParlamentar(interesse, dataInicial, dataFinal, id_parlamentar, qtd) {
+function QueryProposicoesComMaisTweetsPorParlamentar(interesse, dataInicial, dataFinal, id_parlamentar, qtd, destaque) {
   const q ="SELECT " +
     "tweet_proposicao.id_proposicao_leggo, proposicao.sigla, COUNT(tweet_proposicao.id_tweet) AS num_tweets " +
     "FROM " +
@@ -7,6 +7,7 @@ function QueryProposicoesComMaisTweetsPorParlamentar(interesse, dataInicial, dat
     "AND tweet.id_parlamentar_parlametria = '" + id_parlamentar + "' " +
     "AND tweet.created_at BETWEEN '" + dataInicial + "' AND '" + dataFinal + "' " +
     "INNER JOIN proposicao ON tweet_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo " +
+    (destaque === 'true' ? "AND proposicao.destaque = TRUE " : "") +
     "INNER JOIN agenda_proposicao ON agenda_proposicao.id_proposicao_leggo = tweet_proposicao.id_proposicao_leggo " +
     "INNER JOIN agenda ON agenda_proposicao.id_agenda = agenda.id AND agenda.slug = '" + interesse + "' " +
     "GROUP BY tweet_proposicao.id_proposicao_leggo,  proposicao.sigla " +

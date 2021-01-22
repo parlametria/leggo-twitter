@@ -18,6 +18,7 @@ router.get("/parlamentar/:id", (req, res) => {
   let dataInicial = req.query.data_inicial;
   let dataFinal = req.query.data_final;
   let qtd = req.query.qtd;
+  const destaque = req.query.destaque;
 
   dataInicial = moment(dataInicial).format("YYYY-MM-DD");
   dataFinal = moment(dataFinal).format("YYYY-MM-DD");
@@ -32,13 +33,14 @@ router.get("/parlamentar/:id", (req, res) => {
   }
 
   let query;
-  if (typeof tema === "undefined" || tema === "") {
+  if (typeof tema === "undefined" || tema === "" || destaque === "true") {
     query = QueryProposicoesComMaisTweetsPorParlamentar(
       interesse,
       dataInicial,
       dataFinal,
       id_parlamentar,
-      qtd
+      qtd,
+      destaque
     );
   } else {
     query = QueryProposicoesComMaisTweetsPorTemaEParlamentar(
