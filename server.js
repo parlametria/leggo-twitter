@@ -16,6 +16,7 @@ const corsOptions = {
   origin: [
     'http://localhost:4200',
     'http://localhost:3000',
+    'https://leggo-painel.herokuapp.com',
     'https://leggo-painel-validacao.herokuapp.com',
     'https://leggo-painel.parlametria.org.br',
     'https://painel.parlametria.org',
