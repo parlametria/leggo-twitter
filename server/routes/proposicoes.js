@@ -108,10 +108,13 @@ router.get("/", (req, res) => {
   TweetProposicao.findAll({
     attributes: [
       'id_proposicao_leggo',
-      [Sequelize.fn('COUNT', Sequelize.col('tweet_proposicao.id_tweet')) ,'num_tweets'],
-      [Sequelize.fn('SUM', Sequelize.col('tweet.interactions')) ,'interactions']
+      [Sequelize.fn('COUNT', Sequelize.col('tweet_proposicao.id_tweet')) , 'num_tweets'],
+      [Sequelize.fn('SUM', Sequelize.col('tweet.interactions')) , 'interactions'],
+
+      // Necessário alguma manipulação para exibir coluna no select, senão é ignorado.
+      [Sequelize.fn('MIN', Sequelize.col('tweet.created_at')) , 'created_at']
     ],
-    group: ['tweet_proposicao.id_proposicao_leggo'],
+    group: ['tweet_proposicao.id_proposicao_leggo', 'tweet.created_at'],
     includeIgnoreAttributes: false,
     include: [
       {
