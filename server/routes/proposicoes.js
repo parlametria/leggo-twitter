@@ -112,9 +112,10 @@ router.get("/", (req, res) => {
       [Sequelize.fn('SUM', Sequelize.col('tweet.interactions')) , 'interactions'],
 
       // Necessário alguma manipulação para exibir coluna no select, senão é ignorado.
-      [Sequelize.fn('MIN', Sequelize.col('tweet.created_at')) , 'created_at']
+      [Sequelize.fn('MIN', Sequelize.col('tweet.created_at')) , 'created_at'],
+      [Sequelize.fn('LOWER', Sequelize.col('tweet.username')) , 'username']
     ],
-    group: ['tweet_proposicao.id_proposicao_leggo', 'tweet.created_at'],
+    group: ['tweet_proposicao.id_proposicao_leggo', 'tweet.created_at', 'tweet.username'],
     includeIgnoreAttributes: false,
     include: [
       {
