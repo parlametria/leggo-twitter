@@ -14,7 +14,8 @@ const {
   QueryAtividadeAgregadaPorTemaEAgenda,
   QueryTweetsPorTemaEAgenda,
   QueryTweetsInfo,
-  QueryAtividadeAgregadaPorAgendaEDestaque
+  QueryAtividadeAgregadaPorAgendaEDestaque,
+  QueryTweetRawInfo
 } = require("../utils/queries/tweets_queries");
 
 const Tweet = models.tweet;
@@ -153,6 +154,18 @@ router.get("/:id_parlamentar/texto", (req, res) => {
 router.get("/info", (req, res) => {
   models.sequelize
     .query(QueryTweetsInfo(), {
+      type: Sequelize.QueryTypes.SELECT,
+    })
+    .then((info) => {
+      res.status(status.SUCCESS).json(info[0]);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err: err.message }));
+});
+
+// Recupera informações sobre a base de dados tweet_raw_info
+router.get("/info/raw", (req, res) => {
+  models.sequelize
+    .query(QueryTweetRawInfo(), {
       type: Sequelize.QueryTypes.SELECT,
     })
     .then((info) => {
