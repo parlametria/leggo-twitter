@@ -105,9 +105,16 @@ function QueryAtividadeAgregadaPorAgendaEDestaque(interesse, dataInicial, dataFi
   return q;
 }
 
+function QueryTweetRawInfo() {
+  const q = "SELECT * " +
+  "FROM tweet_raw_info"
+  return q;
+}
+
 module.exports = { QueryAtividadeAgregadaPorAgenda,
                     QueryAtividadeAgregadaPorTemaEAgenda,
                     QueryAtividadeAgregada,
                     QueryTweetsPorTemaEAgenda,
                     QueryTweetsInfo,
-                    QueryAtividadeAgregadaPorAgendaEDestaque }
+                    QueryAtividadeAgregadaPorAgendaEDestaque,
+                    QueryTweetRawInfo }
