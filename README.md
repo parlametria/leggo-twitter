@@ -22,7 +22,7 @@ NODE_ENV indica qual o contexto que o NODE deve executar (development ou product
 ```
 POSTGRESURI=postgres://postgres:secret@postgres:5432/leggotwitter
 ```
-POSTGRESURI é a URI de conexão com o banco de dados local do postgres com os dados de tweets e de proposições relacionadas aos tweets.
+POSTGRESURI é a URI de conexão com o banco de dados local do postgres com os dados de tweets e de proposições relacionadas aos tweets. Este banco está localizado no repositório [leggo-twitter-dados](https://github.com/parlametria/leggo-twitter-dados).
 
 ### Passo 2
 
