@@ -18,6 +18,28 @@ function QueryAtividadeAgregadaPorAgenda(interesse, dataInicial, dataFinal) {
   return q;
 }
 
+function QueryAtividadeAgregadaPorAgendaEDia(interesse, dataInicial, dataFinal) {
+  const q = `SELECT
+    tweet.id_parlamentar_parlametria,
+    tweet.created_at,
+    COUNT(tweet.id_tweet) AS atividade_twitter
+  FROM
+    tweet
+    INNER JOIN tweet_proposicao ON (tweet_proposicao.id_tweet = tweet.id_tweet)
+    INNER JOIN proposicao ON (proposicao.id_proposicao_leggo = tweet_proposicao.id_proposicao_leggo)
+    INNER JOIN agenda_proposicao ON (agenda_proposicao.id_proposicao_leggo = proposicao.id_proposicao_leggo)
+    INNER JOIN agenda ON (agenda_proposicao.id_agenda = agenda.id)
+  WHERE
+    agenda.slug = '${interesse}' AND
+    tweet.created_at BETWEEN '${dataInicial}' AND '${dataFinal}' AND
+    tweet_proposicao.relator_proposicao = FALSE AND
+    tweet.id_parlamentar_parlametria IS NOT NULL
+  GROUP BY
+    tweet.id_parlamentar_parlametria, tweet.created_at;`;
+
+  return q;
+}
+
 function QueryAtividadeAgregadaPorTemaEAgenda(tema, interesse, dataInicial, dataFinal) {
   const q = "SELECT " +
   "tweet.id_parlamentar_parlametria, " +
@@ -112,6 +134,7 @@ function QueryTweetRawInfo() {
 }
 
 module.exports = { QueryAtividadeAgregadaPorAgenda,
+                    QueryAtividadeAgregadaPorAgendaEDia,
                     QueryAtividadeAgregadaPorTemaEAgenda,
                     QueryAtividadeAgregada,
                     QueryTweetsPorTemaEAgenda,

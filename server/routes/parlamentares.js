@@ -15,7 +15,8 @@ const {
 const Tweet = models.tweet;
 
 const {
-  QueryAtividadeAgregada
+  QueryAtividadeAgregada,
+  QueryAtividadeAgregadaPorAgendaEDia
 } = require("../utils/queries/tweets_queries");
 
 // Formato da data YYYY-MM-DD
@@ -100,6 +101,31 @@ router.get("/username/:id_parlamentar", (req, res) => {
     })
     .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
 });
+
+router.get("/atividade/diaria", (req, res) => {
+  let dataInicial = req.query.data_inicial;
+  let dataFinal = req.query.data_final;
+  let interesse = req.query.interesse;
+
+  dataInicial = moment(dataInicial).format("YYYY-MM-DD");
+  dataFinal = moment(dataFinal).format("YYYY-MM-DD");
+
+  const query = QueryAtividadeAgregadaPorAgendaEDia(
+    interesse,
+    dataInicial,
+    dataFinal
+  );
+
+  models.sequelize
+    .query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    })
+    .then((tweets) => {
+      res.status(status.SUCCESS).json(tweets);
+    })
+    .catch((err) => res.status(status.BAD_REQUEST).json({ err }));
+});
+
 
 router.get("/:id_parlamentar", (req, res) => {
   const id_parlamentar = req.params.id_parlamentar;
