@@ -7,7 +7,7 @@ module.exports = (sequelize, type) => {
         primaryKey: true
       },
       id_tema: {
-        type: type.STRING,
+        type: type.INTEGER,
         primaryKey: true
       },
     },
